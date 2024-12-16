@@ -1,5 +1,5 @@
 import { useTheme } from "@/useTheme"
-import { useNavigation } from "expo-router"
+import { router, useNavigation } from "expo-router"
 import { useState } from "react"
 import { Appbar, Menu } from "react-native-paper"
 
@@ -22,7 +22,10 @@ export const CustomHeader = ({
 
     return (
         <Appbar.Header style={{ backgroundColor: theme.colors.background }} elevated>
-            <Appbar.BackAction onPress={() => navigation.goBack()} color={theme.colors.primary} />
+            <Appbar.BackAction onPress={() => {
+                console.log('navigation go back', navigation.getId(), '---', navigation.getParent()?.getId())
+                navigation.canGoBack() ? navigation.goBack() : router.push('/home')
+            }} color={theme.colors.primary} />
             <Appbar.Content title={title} titleStyle={{ color: theme.colors.primary }} />
             <Menu
                 visible={menuVisible}
