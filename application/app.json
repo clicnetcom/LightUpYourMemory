@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "ClicNetApp",
-    "slug": "ClicNetApp",
-    "scheme": "ClicNetApp",
+    "name": "LightUpYourMemory",
+    "slug": "LightUpYourMemory",
+    "scheme": "LightUpYourMemory",
     "owner": "rzfzr",
     "version": "0.0.1",
     "orientation": "portrait",
