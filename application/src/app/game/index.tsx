@@ -5,7 +5,7 @@ import { useTheme } from "@/useTheme"
 import { useLocalSearchParams, useNavigation, router } from "expo-router"
 import React from "react"
 import { useEffect, useState } from "react"
-import { View, ScrollView, FlatList, useWindowDimensions, StyleSheet } from "react-native"
+import { View, ScrollView, FlatList, useWindowDimensions, StyleSheet, Pressable, Animated } from "react-native"
 import { Text } from "react-native-paper"
 
 const GAME_TITLES: Record<GameType, string> = {
@@ -13,6 +13,13 @@ const GAME_TITLES: Record<GameType, string> = {
     'time-attack': 'Time Attack',
     'single-ai': 'Versus AI',
     'multiplayer': 'Versus Player'
+}
+
+type CardState = {
+    value: string
+    isFlipped: boolean
+    isMatched: boolean
+    id: number
 }
 
 export default function Game() {
@@ -31,6 +38,9 @@ export default function Game() {
     const CARD_MARGIN = 4
     const CARDS_PER_ROW = 4
     const CARD_SIZE = (width - (CARDS_PER_ROW * CARD_MARGIN * 2)) / CARDS_PER_ROW
+
+    const [cards, setCards] = useState<CardState[]>([])
+    const [flippedCards, setFlippedCards] = useState<number[]>([])
 
     useEffect(() => {
         return () => {
@@ -59,6 +69,52 @@ export default function Game() {
             />
         })
     }, [navigation, gameType])
+
+    useEffect(() => {
+        if (deck) {
+            const shuffledCards = [...deck.cards, ...deck.cards]
+                .sort(() => Math.random() - 0.5)
+                .map((card, index) => ({
+                    value: card,
+                    isFlipped: false,
+                    isMatched: false,
+                    id: index,
+                }))
+            setCards(shuffledCards)
+        }
+    }, [deck])
+
+    const handleCardPress = (cardId: number) => {
+        if (flippedCards.length === 2 || cards[cardId].isMatched || cards[cardId].isFlipped) {
+            return
+        }
+
+        const newCards = [...cards]
+        newCards[cardId].isFlipped = true
+        setCards(newCards)
+
+        const newFlippedCards = [...flippedCards, cardId]
+        setFlippedCards(newFlippedCards)
+
+        if (newFlippedCards.length === 2) {
+            const [firstCard, secondCard] = newFlippedCards
+            if (cards[firstCard].value === cards[secondCard].value) {
+                // Match found
+                newCards[firstCard].isMatched = true
+                newCards[secondCard].isMatched = true
+                setCards(newCards)
+                setFlippedCards([])
+            } else {
+                // No match
+                setTimeout(() => {
+                    newCards[firstCard].isFlipped = false
+                    newCards[secondCard].isFlipped = false
+                    setCards(newCards)
+                    setFlippedCards([])
+                }, 1000)
+            }
+        }
+    }
 
     if (!Object.keys(GAME_TITLES).includes(gameType)) {
         return (
@@ -99,28 +155,36 @@ export default function Game() {
             flex: 1,
         }}>
             <ScrollView>
-                {deck && (
-                    <FlatList
-                        data={[...deck.cards, ...deck.cards]}
-                        numColumns={CARDS_PER_ROW}
-                        scrollEnabled={false}
-                        renderItem={({ item }) => (
+                <FlatList
+                    data={cards}
+                    numColumns={CARDS_PER_ROW}
+                    scrollEnabled={false}
+                    renderItem={({ item }) => (
+                        <Pressable
+                            onPress={() => handleCardPress(item.id)}
+                            style={{
+                                width: CARD_SIZE,
+                                height: CARD_SIZE,
+                                margin: CARD_MARGIN,
+                            }}
+                        >
                             <View
                                 style={{
-                                    width: CARD_SIZE,
-                                    height: CARD_SIZE,
-                                    margin: CARD_MARGIN,
-                                    backgroundColor: theme.colors.primary,
+                                    width: '100%',
+                                    height: '100%',
+                                    backgroundColor: item.isFlipped || item.isMatched ? theme.colors.primary : theme.colors.secondary,
                                     borderRadius: 8,
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}
                             >
-                                <Text style={{ fontSize: CARD_SIZE * 0.5 }}>{item}</Text>
+                                {(item.isFlipped || item.isMatched) && (
+                                    <Text style={{ fontSize: CARD_SIZE * 0.5 }}>{item.value}</Text>
+                                )}
                             </View>
-                        )}
-                    />
-                )}
+                        </Pressable>
+                    )}
+                />
             </ScrollView>
         </View>
     )
