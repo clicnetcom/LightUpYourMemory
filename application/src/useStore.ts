@@ -7,6 +7,8 @@ interface State {
     setIsAutoTheme: (isAutoTheme: boolean) => void,
     isDarkTheme: boolean,
     setIsDarkTheme: (isDarkTheme: boolean) => void,
+    currentGame: Game | null,
+    setCurrentGame: (game: Game) => void,
 }
 export const useStore = create<State>()(
     devtools(
@@ -16,6 +18,8 @@ export const useStore = create<State>()(
                 setIsAutoTheme: (isAutoTheme) => set({ isAutoTheme }),
                 isDarkTheme: false,
                 setIsDarkTheme: (isDarkTheme) => set({ isDarkTheme }),
+                currentGame: null,
+                setCurrentGame: (game) => set({ currentGame: game }),
             }),
             {
                 name: 'main-state',
