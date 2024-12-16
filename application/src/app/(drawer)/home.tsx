@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native"
+import { FlatList, View, useWindowDimensions } from "react-native"
 import { useStore } from '@/useStore'
 import CustomButton from "@/components/CustomButton"
 import { Drawer } from 'expo-router/drawer'
@@ -68,6 +68,9 @@ export default function HomePage() {
 
     }, [])
 
+    const { width } = useWindowDimensions()
+    const CONTAINER_WIDTH = Math.min(300, width - 32)
+
     return (
         <View
             style={{
@@ -91,21 +94,28 @@ export default function HomePage() {
                     }
                 }}
             />
-            <FlatList
-                style={{ backgroundColor: theme.colors.background, flexGrow: 1 }}
-                data={[
-                    { name: 'Single Player', type: 'single' },
-                    { name: 'Time Attack', type: 'time-attack' },
-                    { name: 'versus AI', type: 'single-ai' },
-                    { name: 'versus Player', type: 'multiplayer' },
-                ]}
-                renderItem={({ item }) => (
-                    <CustomButton
-                        path={`/game`}
-                        params={{ type: item.type }}
-                        label={item.name} />
-                )}
-            />
+            <View style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <View style={{ width: CONTAINER_WIDTH }}>
+                    <FlatList
+                        data={[
+                            { name: 'Single Player', type: 'single' },
+                            { name: 'Time Attack', type: 'time-attack' },
+                            { name: 'versus AI', type: 'single-ai' },
+                            { name: 'versus Player', type: 'multiplayer' },
+                        ]}
+                        renderItem={({ item }) => (
+                            <CustomButton
+                                path={`/game`}
+                                params={{ type: item.type }}
+                                label={item.name} />
+                        )}
+                    />
+                </View>
+            </View>
         </View>
     )
 }
