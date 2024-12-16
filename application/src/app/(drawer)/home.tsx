@@ -4,10 +4,60 @@ import CustomButton from "@/components/CustomButton"
 import { Drawer } from 'expo-router/drawer'
 import { DrawerToggleButton } from "@react-navigation/drawer"
 import { useTheme } from "@/useTheme"
+import { useEffect } from "react"
 
 export default function HomePage() {
     const theme = useTheme()
     const setCurrentGame = useStore(state => state.setCurrentGame)
+    const decks: Deck[] = [
+        {
+            id: 'emojis',
+            title: 'Emojis',
+            description: 'A deck of emojis',
+            cards: [
+                '😀', '❤️', '🎮', '🌟', '🎨',
+                '🎵', '🎪', '🎯', '🎲', '🎭',
+            ]
+        },
+        {
+            id: 'easy',
+            title: 'Easy',
+            description: 'For testing only',
+            cards: [
+                '😀', '❤️', '🎮'
+            ]
+        },
+        {
+            id: 'numbers',
+            title: 'Numbers',
+            description: 'A deck of numbers',
+            cards: [
+                '1', '2', '3', '4', '5',
+                '6', '7', '8', '9', '10'
+            ]
+        },
+        {
+            id: 'animals',
+            title: 'Animals',
+            description: 'A deck of animals',
+            cards: [
+                'https://picsum.photos/200',
+                'https://picsum.photos/205',
+                'https://picsum.photos/210',
+                'https://picsum.photos/215',
+                'https://picsum.photos/220',
+                'https://picsum.photos/225',
+
+            ]
+        }
+    ]
+
+    const setDecks = useStore(state => state.setDecks)
+    useEffect(() => {
+        console.log('setting decks')
+        setDecks(decks)
+
+    }, [])
 
     return (
         <View
