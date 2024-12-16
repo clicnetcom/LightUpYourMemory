@@ -25,6 +25,8 @@ export default function Game() {
         state.currentGame, state.setCurrentGame])
     const [deckModalVisible, setDeckModalVisible] = useState(true)
 
+    const deck = useStore(state => state.decks.find(deck => deck.id === currentGame?.deck))
+
     useEffect(() => {
         return () => {
             setCurrentGame(null)
@@ -96,7 +98,7 @@ export default function Game() {
                     Game Type {GAME_TITLES[gameType]}
                 </Text>
                 <Text variant="headlineMedium">
-                    Deck {currentGame?.deck}
+                    Deck {currentGame?.deck} - {deck?.title}
                 </Text>
             </ScrollView>
         </View>
