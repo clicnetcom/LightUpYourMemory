@@ -39,7 +39,6 @@ export default function CustomButton({
                 if (onPress) {
                     onPress()
                 }
-                console.log('path', path, 'params', params)
                 if (path && params) {
                     router.push({ pathname: path, params: params })
                 } else if (path) {
