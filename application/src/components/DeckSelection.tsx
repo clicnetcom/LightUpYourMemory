@@ -34,6 +34,20 @@ export default function DeckSelection({ visible, onDismiss }: { visible: boolean
                 '1', '2', '3', '4', '5',
                 '6', '7', '8', '9', '10'
             ]
+        },
+        {
+            id: 'animals',
+            title: 'Animals',
+            description: 'A deck of animals',
+            cards: [
+                'https://picsum.photos/200',
+                'https://picsum.photos/205',
+                'https://picsum.photos/210',
+                'https://picsum.photos/215',
+                'https://picsum.photos/220',
+                'https://picsum.photos/225',
+
+            ]
         }
     ]
 
@@ -53,7 +67,7 @@ export default function DeckSelection({ visible, onDismiss }: { visible: boolean
             >
                 <ScrollView>
                     <Text variant="headlineMedium" style={{ marginBottom: 16 }}>
-                        Select a deck
+                        Select a deck:
                     </Text>
 
                     {decks.map(deck => (
