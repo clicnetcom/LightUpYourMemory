@@ -17,7 +17,17 @@ export default function CardView({ cards, onCardPress }: CardViewProps) {
     const { width } = useWindowDimensions()
     const MIN_CARD_SIZE = 200
     const CARD_MARGIN = 4
-    const CARDS_PER_ROW = Math.min(Math.floor(width / (MIN_CARD_SIZE + (CARD_MARGIN * 2))), cards.length)
+
+    const maxCardsPerRow = Math.floor(width / (MIN_CARD_SIZE + (CARD_MARGIN * 2)))
+    const CARDS_PER_ROW = Math.max(2,
+        Math.min(
+            maxCardsPerRow,
+            [...Array(maxCardsPerRow + 1).keys()]
+                .slice(2)
+                .reverse()
+                .find(n => cards.length % n === 0) || maxCardsPerRow
+        )
+    )
     const CARD_SIZE = (width - (CARDS_PER_ROW * CARD_MARGIN * 2)) / CARDS_PER_ROW
 
     return (
