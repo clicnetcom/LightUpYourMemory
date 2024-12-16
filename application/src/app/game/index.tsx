@@ -1,41 +1,63 @@
 import { CustomHeader } from "@/components/CustomHeader"
 import { useTheme } from "@/useTheme"
-import { useGlobalSearchParams, useLocalSearchParams, useNavigation } from "expo-router"
+import { useLocalSearchParams, useNavigation, router } from "expo-router"
 import { useEffect } from "react"
 import { View, ScrollView } from "react-native"
 import { Text } from "react-native-paper"
 
+const GAME_TITLES: Record<GameType, string> = {
+    'single': 'Single Player',
+    'time-attack': 'Time Attack',
+    'single-ai': 'Versus AI',
+    'multiplayer': 'Versus Player'
+}
+
 export default function Game() {
     const theme = useTheme()
     const navigation = useNavigation()
-
     const local = useLocalSearchParams()
     const gameType = local?.type as GameType
 
-
-
     useEffect(() => {
+        if (!Object.keys(GAME_TITLES).includes(gameType)) {
+            setTimeout(() => {
+                router.replace('/home')
+            }, 2000)
+            return
+        }
+
         navigation.setOptions({
             header: () => <CustomHeader
                 items={[]}
-                title={"Single Player"}
+                title={GAME_TITLES[gameType]}
             />
         })
-    }, [navigation])
-    return (
-        <View
-            style={{
+    }, [navigation, gameType])
+
+    if (!Object.keys(GAME_TITLES).includes(gameType)) {
+        return (
+            <View style={{
                 backgroundColor: theme.colors.background,
                 flex: 1,
-            }}
-        >
-
-            <ScrollView>
-
-                <Text variant="headlineMedium">
-                    Generic Game of type {gameType}
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <Text variant="headlineMedium" style={{ color: theme.colors.error }}>
+                    Invalid game type, redirecting home
                 </Text>
+            </View>
+        )
+    }
 
+    return (
+        <View style={{
+            backgroundColor: theme.colors.background,
+            flex: 1,
+        }}>
+            <ScrollView>
+                <Text variant="headlineMedium">
+                    {GAME_TITLES[gameType]}
+                </Text>
             </ScrollView>
         </View>
     )
