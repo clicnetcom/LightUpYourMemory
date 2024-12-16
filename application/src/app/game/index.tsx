@@ -5,7 +5,7 @@ import { useTheme } from "@/useTheme"
 import { useLocalSearchParams, useNavigation, router } from "expo-router"
 import React, { useCallback } from "react"
 import { useEffect, useState } from "react"
-import { View, ScrollView, FlatList, useWindowDimensions, StyleSheet, Pressable, Animated } from "react-native"
+import { View, FlatList, useWindowDimensions, StyleSheet, Pressable, Animated } from "react-native"
 import { Text, Portal, Modal, Button } from "react-native-paper"
 import CardView from "@/components/CardView"
 
@@ -200,12 +200,10 @@ export default function Game() {
                     </Text>}
             </View>
 
-            <ScrollView>
-                <CardView
-                    cards={cards}
-                    onCardPress={handleCardPress}
-                />
-            </ScrollView>
+            <CardView
+                cards={cards}
+                onCardPress={handleCardPress}
+            />
 
             <Portal>
                 <Modal

@@ -14,53 +14,72 @@ type CardViewProps = {
 
 export default function CardView({ cards, onCardPress }: CardViewProps) {
     const theme = useTheme()
-    const { width } = useWindowDimensions()
-    const MIN_CARD_SIZE = 200
+    const { width, height } = useWindowDimensions()
+    const AVAILABLE_HEIGHT = height - 150 // space for  header
     const CARD_MARGIN = 4
 
-    const maxCardsPerRow = Math.floor(width / (MIN_CARD_SIZE + (CARD_MARGIN * 2)))
-    const CARDS_PER_ROW = Math.max(2,
-        Math.min(
-            maxCardsPerRow,
-            [...Array(maxCardsPerRow + 1).keys()]
-                .slice(2)
-                .reverse()
-                .find(n => cards.length % n === 0) || maxCardsPerRow
-        )
-    )
-    const CARD_SIZE = (width - (CARDS_PER_ROW * CARD_MARGIN * 2)) / CARDS_PER_ROW
+    const totalCards = cards.length
+
+    let bestCols = totalCards
+    let bestSize = 0
+
+    for (let rows = 2; rows <= totalCards; rows++) {
+        if (totalCards % rows === 0) {
+            const cols = totalCards / rows
+            const maxWidthPerCard = (width - (cols * CARD_MARGIN * 2)) / cols
+            const maxHeightPerCard = (AVAILABLE_HEIGHT - (rows * CARD_MARGIN * 2)) / rows
+            const size = Math.min(maxWidthPerCard, maxHeightPerCard)
+
+            if (size > bestSize) {
+                bestSize = size
+                bestCols = cols
+            }
+        }
+    }
+
+    const CARDS_PER_ROW = bestCols
+    const CARD_SIZE = bestSize
 
     return (
-        <FlatList
-            data={cards}
-            numColumns={CARDS_PER_ROW}
-            key={CARDS_PER_ROW}
-            scrollEnabled={false}
-            renderItem={({ item }) => (
-                <Pressable
-                    onPress={() => onCardPress(item.id)}
-                    style={{
-                        width: CARD_SIZE,
-                        height: CARD_SIZE,
-                        margin: CARD_MARGIN,
-                    }}
-                >
-                    <View
+        <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}>
+            <FlatList
+                data={cards}
+                numColumns={CARDS_PER_ROW}
+                key={CARDS_PER_ROW}
+                scrollEnabled={false}
+                renderItem={({ item }) => (
+                    <Pressable
+                        onPress={() => onCardPress(item.id)}
                         style={{
-                            width: '100%',
-                            height: '100%',
-                            backgroundColor: item.isFlipped || item.isMatched ? theme.colors.primary : theme.colors.secondary,
-                            borderRadius: 8,
-                            justifyContent: 'center',
-                            alignItems: 'center',
+                            width: CARD_SIZE,
+                            height: CARD_SIZE,
+                            margin: CARD_MARGIN,
                         }}
                     >
-                        {(item.isFlipped || item.isMatched) && (
-                            <Text style={{ fontSize: CARD_SIZE * 0.5 }}>{item.value}</Text>
-                        )}
-                    </View>
-                </Pressable>
-            )}
-        />
+                        <View
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                backgroundColor: item.isFlipped || item.isMatched ? theme.colors.primary : theme.colors.secondary,
+                                borderRadius: 8,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            {(item.isFlipped || item.isMatched) && (
+                                <Text style={{ fontSize: CARD_SIZE * 0.5 }}>{item.value}</Text>
+                            )}
+                        </View>
+                    </Pressable>
+                )}
+                style={{
+                    width: (CARD_SIZE + CARD_MARGIN * 2) * CARDS_PER_ROW,
+                }}
+            />
+        </View>
     )
 }
