@@ -180,21 +180,7 @@ export default function Game() {
     }
 
     if (currentGame && !currentGame?.deck) {
-        return (
-            <>
-                <View style={{
-                    backgroundColor: theme.colors.background,
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}>
-                    <Text variant="headlineMedium">Please select a deck</Text>
-                </View>
-                <DeckSelection
-                    visible={deckModalVisible}
-                />
-            </>
-        )
+        return <DeckSelection />
     }
 
     return (
