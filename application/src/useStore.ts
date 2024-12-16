@@ -13,6 +13,14 @@ const decks: Deck[] = [
         ]
     },
     {
+        id: 'easy',
+        title: 'Easy',
+        description: 'For testing only',
+        cards: [
+            '😀', '❤️', '🎮'
+        ]
+    },
+    {
         id: 'numbers',
         title: 'Numbers',
         description: 'A deck of numbers',
