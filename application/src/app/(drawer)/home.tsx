@@ -49,6 +49,15 @@ export default function HomePage() {
                 'https://picsum.photos/225',
 
             ]
+        },
+        {
+            id: 'verbs',
+            title: 'Verbs',
+            description: 'A deck of verbs',
+            cards: [
+                'run', 'jump', 'swim', 'fly', 'walk',
+                'sing', 'dance', 'read', 'write', 'paint'
+            ]
         }
     ]
 
