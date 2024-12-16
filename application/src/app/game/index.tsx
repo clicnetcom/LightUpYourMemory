@@ -34,10 +34,6 @@ export default function Game() {
 
     const deck = useStore(state => state.decks.find(deck => deck.id === currentGame?.deck))
 
-    const { width } = useWindowDimensions()
-    const CARD_MARGIN = 4
-    const CARDS_PER_ROW = 4
-    const CARD_SIZE = (width - (CARDS_PER_ROW * CARD_MARGIN * 2)) / CARDS_PER_ROW
 
     const [cards, setCards] = useState<CardState[]>([])
     const [flippedCards, setFlippedCards] = useState<number[]>([])
@@ -45,6 +41,12 @@ export default function Game() {
     const [timer, setTimer] = useState(0)
     const [isRunning, setIsRunning] = useState(true)
     const [isGameComplete, setIsGameComplete] = useState(false)
+
+    const { width } = useWindowDimensions()
+    const MIN_CARD_SIZE = 200
+    const CARD_MARGIN = 4
+    const CARDS_PER_ROW = Math.min(Math.floor(width / (MIN_CARD_SIZE + (CARD_MARGIN * 2))), cards.length)
+    const CARD_SIZE = (width - (CARDS_PER_ROW * CARD_MARGIN * 2)) / CARDS_PER_ROW
 
     useEffect(() => {
         return () => {
@@ -219,6 +221,7 @@ export default function Game() {
                 <FlatList
                     data={cards}
                     numColumns={CARDS_PER_ROW}
+                    key={CARDS_PER_ROW}
                     scrollEnabled={false}
                     renderItem={({ item }) => (
                         <Pressable
