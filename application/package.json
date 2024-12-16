@@ -4,6 +4,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "npx expo start",
+    "web": "npx expo start --web",
     "android": "npx expo start --android",
     "ios": "npx expo start --ios",
     "build-dev": "eas build --profile preview --platform=android",
