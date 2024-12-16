@@ -1,14 +1,24 @@
 import { useColorScheme } from "react-native"
 import { MD3LightTheme, MD3DarkTheme } from "react-native-paper"
 import { useStore } from "@/useStore"
+import { StatusBarStyle } from "expo-status-bar"
 
-export const useTheme = () => {
+export const useThemeMode = (): StatusBarStyle => {
     const [isAutoTheme, isDarkTheme] = useStore((state) => [state.isAutoTheme, state.isDarkTheme])
     const colorScheme = useColorScheme()
     if (isAutoTheme) {
-        return colorScheme === 'dark' ? darkTheme : lightTheme
+        return colorScheme || "light"
     }
-    return isDarkTheme ? darkTheme : lightTheme
+    return isDarkTheme ? "dark" : "light"
+}
+
+export const useInvertedThemeMode = (): StatusBarStyle => {
+    const themeMode = useThemeMode()
+    return themeMode === 'light' ? 'dark' : 'light'
+}
+
+export const useTheme = () => {
+    return (useThemeMode() === 'light') ? lightTheme : darkTheme
 }
 
 const lightTheme = {
