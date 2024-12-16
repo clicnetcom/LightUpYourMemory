@@ -5,7 +5,7 @@ import { useTheme } from "@/useTheme"
 import { useLocalSearchParams, useNavigation, router } from "expo-router"
 import React from "react"
 import { useEffect, useState } from "react"
-import { View, ScrollView } from "react-native"
+import { View, ScrollView, FlatList, useWindowDimensions, StyleSheet } from "react-native"
 import { Text } from "react-native-paper"
 
 const GAME_TITLES: Record<GameType, string> = {
@@ -26,6 +26,11 @@ export default function Game() {
     const [deckModalVisible, setDeckModalVisible] = useState(true)
 
     const deck = useStore(state => state.decks.find(deck => deck.id === currentGame?.deck))
+
+    const { width } = useWindowDimensions()
+    const CARD_MARGIN = 4
+    const CARDS_PER_ROW = 4
+    const CARD_SIZE = (width - (CARDS_PER_ROW * CARD_MARGIN * 2)) / CARDS_PER_ROW
 
     useEffect(() => {
         return () => {
@@ -94,12 +99,28 @@ export default function Game() {
             flex: 1,
         }}>
             <ScrollView>
-                <Text variant="headlineMedium">
-                    Game Type {GAME_TITLES[gameType]}
-                </Text>
-                <Text variant="headlineMedium">
-                    Deck {currentGame?.deck} - {deck?.title}
-                </Text>
+                {deck && (
+                    <FlatList
+                        data={[...deck.cards, ...deck.cards]}
+                        numColumns={CARDS_PER_ROW}
+                        scrollEnabled={false}
+                        renderItem={({ item }) => (
+                            <View
+                                style={{
+                                    width: CARD_SIZE,
+                                    height: CARD_SIZE,
+                                    margin: CARD_MARGIN,
+                                    backgroundColor: theme.colors.primary,
+                                    borderRadius: 8,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Text style={{ fontSize: CARD_SIZE * 0.5 }}>{item}</Text>
+                            </View>
+                        )}
+                    />
+                )}
             </ScrollView>
         </View>
     )
