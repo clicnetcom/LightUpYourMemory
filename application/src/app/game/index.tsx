@@ -7,6 +7,7 @@ import React, { useCallback } from "react"
 import { useEffect, useState } from "react"
 import { View, ScrollView, FlatList, useWindowDimensions, StyleSheet, Pressable, Animated } from "react-native"
 import { Text, Portal, Modal, Button } from "react-native-paper"
+import CardView from "@/components/CardView"
 
 const GAME_TITLES: Record<GameType, string> = {
     'single': 'Single Player',
@@ -43,10 +44,6 @@ export default function Game() {
     const [isGameComplete, setIsGameComplete] = useState(false)
 
     const { width } = useWindowDimensions()
-    const MIN_CARD_SIZE = 200
-    const CARD_MARGIN = 4
-    const CARDS_PER_ROW = Math.min(Math.floor(width / (MIN_CARD_SIZE + (CARD_MARGIN * 2))), cards.length)
-    const CARD_SIZE = (width - (CARDS_PER_ROW * CARD_MARGIN * 2)) / CARDS_PER_ROW
 
     useEffect(() => {
         return () => {
@@ -204,36 +201,9 @@ export default function Game() {
             </View>
 
             <ScrollView>
-                <FlatList
-                    data={cards}
-                    numColumns={CARDS_PER_ROW}
-                    key={CARDS_PER_ROW}
-                    scrollEnabled={false}
-                    renderItem={({ item }) => (
-                        <Pressable
-                            onPress={() => handleCardPress(item.id)}
-                            style={{
-                                width: CARD_SIZE,
-                                height: CARD_SIZE,
-                                margin: CARD_MARGIN,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    backgroundColor: item.isFlipped || item.isMatched ? theme.colors.primary : theme.colors.secondary,
-                                    borderRadius: 8,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                {(item.isFlipped || item.isMatched) && (
-                                    <Text style={{ fontSize: CARD_SIZE * 0.5 }}>{item.value}</Text>
-                                )}
-                            </View>
-                        </Pressable>
-                    )}
+                <CardView
+                    cards={cards}
+                    onCardPress={handleCardPress}
                 />
             </ScrollView>
 
