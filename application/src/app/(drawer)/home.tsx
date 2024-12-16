@@ -31,6 +31,20 @@ export default function HomePage() {
                     }
                 }}
             />
+            <FlatList
+                style={{ backgroundColor: theme.colors.background, flexGrow: 1 }}
+                data={[
+                    { name: 'Single Player', path: 'single' },
+                    { name: 'Time Attack', path: 'time-attack' },
+                    { name: 'versus AI', path: 'single-ai' },
+                    { name: 'versus Player', path: 'multiplayer' },
+                ]}
+                renderItem={({ item }) => (
+                    <CustomButton
+                        path={`/game/${item.path}`}
+                        label={item.name} />
+                )}
+            />
         </View>
     )
 }
