@@ -3,7 +3,7 @@ import { View, ScrollView } from "react-native"
 import { Text, Portal, Modal, Button } from "react-native-paper"
 import { useStore } from "@/useStore"
 
-export default function DeckSelection({ visible, onDismiss }: { visible: boolean, onDismiss: () => void }) {
+export default function DeckSelection({ visible, onDismiss }: { visible: boolean, onDismiss?: () => void }) {
     const theme = useTheme()
     const [currentGame, setCurrentGame] = useStore(state => [state.currentGame, state.setCurrentGame])
 
@@ -42,6 +42,7 @@ export default function DeckSelection({ visible, onDismiss }: { visible: boolean
             <Modal
                 visible={visible}
                 onDismiss={onDismiss}
+                dismissable={false}
                 contentContainerStyle={{
                     backgroundColor: theme.colors.background,
                     padding: 20,

@@ -8,7 +8,7 @@ interface State {
     isDarkTheme: boolean,
     setIsDarkTheme: (isDarkTheme: boolean) => void,
     currentGame: Game | null,
-    setCurrentGame: (game: Game) => void,
+    setCurrentGame: (game: Game | null) => void,
 }
 export const useStore = create<State>()(
     devtools(

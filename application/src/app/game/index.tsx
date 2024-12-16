@@ -26,6 +26,12 @@ export default function Game() {
     const [deckModalVisible, setDeckModalVisible] = useState(true)
 
     useEffect(() => {
+        return () => {
+            setCurrentGame(null)
+        }
+    }, [])
+
+    useEffect(() => {
         if (!Object.keys(GAME_TITLES).includes(gameType)) {
             setTimeout(() => {
                 router.replace('/home')
@@ -75,7 +81,6 @@ export default function Game() {
                 </View>
                 <DeckSelection
                     visible={deckModalVisible}
-                    onDismiss={() => router.replace('/home')}
                 />
             </>
         )
@@ -88,7 +93,10 @@ export default function Game() {
         }}>
             <ScrollView>
                 <Text variant="headlineMedium">
-                    {GAME_TITLES[gameType]}
+                    Game Type {GAME_TITLES[gameType]}
+                </Text>
+                <Text variant="headlineMedium">
+                    Deck {currentGame?.deck}
                 </Text>
             </ScrollView>
         </View>
