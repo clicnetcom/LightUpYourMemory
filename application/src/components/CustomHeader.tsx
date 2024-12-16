@@ -23,7 +23,6 @@ export const CustomHeader = ({
     return (
         <Appbar.Header style={{ backgroundColor: theme.colors.background }} elevated>
             <Appbar.BackAction onPress={() => {
-                console.log('navigation go back', navigation.getId(), '---', navigation.getParent()?.getId())
                 navigation.canGoBack() ? navigation.goBack() : router.push('/home')
             }} color={theme.colors.primary} />
             <Appbar.Content title={title} titleStyle={{ color: theme.colors.primary }} />
