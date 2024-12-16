@@ -1,13 +1,17 @@
 import { CustomHeader } from "@/components/CustomHeader"
 import { useTheme } from "@/useTheme"
-import { useNavigation } from "expo-router"
+import { useGlobalSearchParams, useLocalSearchParams, useNavigation } from "expo-router"
 import { useEffect } from "react"
 import { View, ScrollView } from "react-native"
 import { Text } from "react-native-paper"
 
-export default function Single() {
+export default function Game() {
     const theme = useTheme()
     const navigation = useNavigation()
+
+    const local = useLocalSearchParams()
+    const gameType = local?.type as GameType
+
 
 
     useEffect(() => {
@@ -29,7 +33,7 @@ export default function Single() {
             <ScrollView>
 
                 <Text variant="headlineMedium">
-                    Single mode
+                    Generic Game of type {gameType}
                 </Text>
 
             </ScrollView>

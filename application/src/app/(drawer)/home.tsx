@@ -7,6 +7,7 @@ import { useTheme } from "@/useTheme"
 
 export default function HomePage() {
     const theme = useTheme()
+    const setCurrentGame = useStore(state => state.setCurrentGame)
 
     return (
         <View
@@ -34,14 +35,15 @@ export default function HomePage() {
             <FlatList
                 style={{ backgroundColor: theme.colors.background, flexGrow: 1 }}
                 data={[
-                    { name: 'Single Player', path: 'single' },
-                    { name: 'Time Attack', path: 'time-attack' },
-                    { name: 'versus AI', path: 'single-ai' },
-                    { name: 'versus Player', path: 'multiplayer' },
+                    { name: 'Single Player', type: 'single' },
+                    { name: 'Time Attack', type: 'time-attack' },
+                    { name: 'versus AI', type: 'single-ai' },
+                    { name: 'versus Player', type: 'multiplayer' },
                 ]}
                 renderItem={({ item }) => (
                     <CustomButton
-                        path={`/game/${item.path}`}
+                        path={`/game`}
+                        params={{ type: item.type }}
                         label={item.name} />
                 )}
             />
