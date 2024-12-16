@@ -5,5 +5,11 @@ export declare global {
         type: GameType
         deck?: string
     }
+    type Deck = {
+        id: string
+        title: string
+        description: string
+        cards: string[]
+    }
 
 }

@@ -6,6 +6,7 @@ import { useStore } from "@/useStore"
 export default function DeckSelection({ visible, onDismiss }: { visible: boolean, onDismiss?: () => void }) {
     const theme = useTheme()
     const [currentGame, setCurrentGame] = useStore(state => [state.currentGame, state.setCurrentGame])
+    const decks = useStore(state => state.decks)
 
     const selectDeck = (deckId: string) => {
         if (currentGame) {
@@ -15,41 +16,6 @@ export default function DeckSelection({ visible, onDismiss }: { visible: boolean
             })
         }
     }
-
-    const decks = [
-        {
-            id: 'emojis',
-            title: 'Emojis',
-            description: 'A deck of emojis',
-            cards: [
-                '😀', '❤️', '🎮', '🌟', '🎨',
-                '🎵', '🎪', '🎯', '🎲', '🎭',
-            ]
-        },
-        {
-            id: 'numbers',
-            title: 'Numbers',
-            description: 'A deck of numbers',
-            cards: [
-                '1', '2', '3', '4', '5',
-                '6', '7', '8', '9', '10'
-            ]
-        },
-        {
-            id: 'animals',
-            title: 'Animals',
-            description: 'A deck of animals',
-            cards: [
-                'https://picsum.photos/200',
-                'https://picsum.photos/205',
-                'https://picsum.photos/210',
-                'https://picsum.photos/215',
-                'https://picsum.photos/220',
-                'https://picsum.photos/225',
-
-            ]
-        }
-    ]
 
     return (
         <Portal>
