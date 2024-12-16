@@ -1,4 +1,5 @@
 import { CustomHeader } from "@/components/CustomHeader"
+import DeckSelection from "@/components/DeckSelection"
 import { useStore } from "@/useStore"
 import { useTheme } from "@/useTheme"
 import { useLocalSearchParams, useNavigation, router } from "expo-router"
@@ -20,7 +21,7 @@ export default function Game() {
     const gameType = local?.type as GameType
 
     const [currentGame, setCurrentGame] = useStore(state => [
-        state.setCurrentGame, state.setCurrentGame])
+        state.currentGame, state.setCurrentGame])
 
     useEffect(() => {
         if (!Object.keys(GAME_TITLES).includes(gameType)) {
@@ -56,6 +57,12 @@ export default function Game() {
                     Invalid game type, redirecting home
                 </Text>
             </View>
+        )
+    }
+
+    if (currentGame && !currentGame?.deck) {
+        return (
+            <DeckSelection />
         )
     }
 
