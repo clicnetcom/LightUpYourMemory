@@ -1,4 +1,5 @@
 import { CustomHeader } from "@/components/CustomHeader"
+import { useStore } from "@/useStore"
 import { useTheme } from "@/useTheme"
 import { useLocalSearchParams, useNavigation, router } from "expo-router"
 import { useEffect } from "react"
@@ -18,12 +19,21 @@ export default function Game() {
     const local = useLocalSearchParams()
     const gameType = local?.type as GameType
 
+    const [currentGame, setCurrentGame] = useStore(state => [
+        state.setCurrentGame, state.setCurrentGame])
+
     useEffect(() => {
         if (!Object.keys(GAME_TITLES).includes(gameType)) {
             setTimeout(() => {
                 router.replace('/home')
             }, 2000)
             return
+        }
+        if (!currentGame) {
+            setCurrentGame({
+                id: new Date().getTime().toString(),
+                type: gameType
+            })
         }
 
         navigation.setOptions({

@@ -3,7 +3,7 @@ export declare global {
     type Game = {
         id: string
         type: GameType
-        deck: string
+        deck?: string
     }
 
 }
