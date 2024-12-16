@@ -27,7 +27,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.clicnet.greasethegroove"
+      "package": "com.clicnet.lightupyourmemory"
     },
     "web": {
       "favicon": "./assets/favicon.png"
