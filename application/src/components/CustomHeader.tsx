@@ -5,14 +5,15 @@ import { Appbar, Menu } from "react-native-paper"
 
 export const CustomHeader = ({
     title,
-    items }: {
-        title: any,
-        items: {
-            title: string,
-            icon: string,
-            action: Function
-        }[]
-    }) => {
+    items = []
+}: {
+    title: any,
+    items: {
+        title: string,
+        icon: string,
+        action: Function
+    }[]
+}) => {
     const navigation = useNavigation()
     const [menuVisible, setMenuVisible] = useState(false)
     const theme = useTheme()
@@ -26,21 +27,23 @@ export const CustomHeader = ({
                 navigation.canGoBack() ? navigation.goBack() : router.push('/home')
             }} color={theme.colors.primary} />
             <Appbar.Content title={title} titleStyle={{ color: theme.colors.primary }} />
-            <Menu
-                visible={menuVisible}
-                onDismiss={closeMenu}
-                anchor={<Appbar.Action icon="dots-vertical" color={theme.colors.primary} onPress={openMenu} />}
-            >
-                {items.map((item) => (
-                    <Menu.Item
-                        key={item.title}
-                        leadingIcon={item.icon}
-                        onPress={() => {
-                            closeMenu()
-                            item.action()
-                        }} title={item.title} />
-                ))}
-            </Menu>
+            {items.length > 0 &&
+                <Menu
+                    visible={menuVisible}
+                    onDismiss={closeMenu}
+                    anchor={<Appbar.Action icon="dots-vertical" color={theme.colors.primary} onPress={openMenu} />}
+                >
+                    {items.map((item) => (
+                        <Menu.Item
+                            key={item.title}
+                            leadingIcon={item.icon}
+                            onPress={() => {
+                                closeMenu()
+                                item.action()
+                            }} title={item.title} />
+                    ))}
+                </Menu>
+            }
         </Appbar.Header>
     )
 }
