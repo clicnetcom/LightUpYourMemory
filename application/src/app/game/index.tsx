@@ -3,7 +3,7 @@ import DeckSelection from "@/components/DeckSelection"
 import { useStore } from "@/useStore"
 import { useTheme } from "@/useTheme"
 import { useLocalSearchParams, useNavigation, router } from "expo-router"
-import React from "react"
+import React, { useCallback } from "react"
 import { useEffect, useState } from "react"
 import { View, ScrollView, FlatList, useWindowDimensions, StyleSheet, Pressable, Animated } from "react-native"
 import { Text } from "react-native-paper"
@@ -42,6 +42,8 @@ export default function Game() {
     const [cards, setCards] = useState<CardState[]>([])
     const [flippedCards, setFlippedCards] = useState<number[]>([])
     const [mistakes, setMistakes] = useState(0)
+    const [timer, setTimer] = useState(0)
+    const [isRunning, setIsRunning] = useState(true)
 
     useEffect(() => {
         return () => {
@@ -84,6 +86,22 @@ export default function Game() {
             setCards(shuffledCards)
         }
     }, [deck])
+
+    useEffect(() => {
+        let intervalId: NodeJS.Timeout
+        if (isRunning) {
+            intervalId = setInterval(() => {
+                setTimer(prev => prev + 1)
+            }, 1000)
+        }
+        return () => clearInterval(intervalId)
+    }, [isRunning])
+
+    const formatTime = useCallback((time: number) => {
+        const minutes = Math.floor(time / 60)
+        const seconds = time % 60
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+    }, [])
 
     const handleCardPress = (cardId: number) => {
         if (flippedCards.length === 2 || cards[cardId].isMatched || cards[cardId].isFlipped) {
@@ -156,10 +174,20 @@ export default function Game() {
             backgroundColor: theme.colors.background,
             flex: 1,
         }}>
-
-            <Text variant="headlineMedium" style={{ margin: 16 }}>
-                {mistakes} mistakes
-            </Text>
+            <View style={{
+                margin: 16,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+            }}>
+                <Text variant="headlineMedium">
+                    {mistakes} mistakes
+                </Text>
+                {gameType === 'time-attack' &&
+                    <Text variant="headlineMedium">
+                        {formatTime(timer)}
+                    </Text>}
+            </View>
 
             <ScrollView>
                 <FlatList
