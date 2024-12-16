@@ -3,7 +3,7 @@ import DeckSelection from "@/components/DeckSelection"
 import { useStore } from "@/useStore"
 import { useTheme } from "@/useTheme"
 import { useLocalSearchParams, useNavigation, router } from "expo-router"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { View, ScrollView } from "react-native"
 import { Text } from "react-native-paper"
 
@@ -22,6 +22,7 @@ export default function Game() {
 
     const [currentGame, setCurrentGame] = useStore(state => [
         state.currentGame, state.setCurrentGame])
+    const [deckModalVisible, setDeckModalVisible] = useState(true)
 
     useEffect(() => {
         if (!Object.keys(GAME_TITLES).includes(gameType)) {
@@ -62,7 +63,20 @@ export default function Game() {
 
     if (currentGame && !currentGame?.deck) {
         return (
-            <DeckSelection />
+            <>
+                <View style={{
+                    backgroundColor: theme.colors.background,
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <Text variant="headlineMedium">Please select a deck</Text>
+                </View>
+                <DeckSelection
+                    visible={deckModalVisible}
+                    onDismiss={() => router.replace('/home')}
+                />
+            </>
         )
     }
 
