@@ -7,6 +7,7 @@ import { Button, Icon, MD3Theme, useTheme } from 'react-native-paper'
 
 export default function CustomButton({
     path,
+    params,
     onPress,
     label,
     icon,
@@ -14,6 +15,7 @@ export default function CustomButton({
     buttonStyle = {}
 }: {
     path?: string,
+    params?: any,
     onPress?: Function,
     label: string,
     icon?: string,
@@ -37,7 +39,10 @@ export default function CustomButton({
                 if (onPress) {
                     onPress()
                 }
-                if (path) {
+                console.log('path', path, 'params', params)
+                if (path && params) {
+                    router.push({ pathname: path, params: params })
+                } else if (path) {
                     router.push(path)
                 }
             }}
