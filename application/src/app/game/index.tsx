@@ -41,6 +41,7 @@ export default function Game() {
 
     const [cards, setCards] = useState<CardState[]>([])
     const [flippedCards, setFlippedCards] = useState<number[]>([])
+    const [mistakes, setMistakes] = useState(0)
 
     useEffect(() => {
         return () => {
@@ -68,7 +69,7 @@ export default function Game() {
                 title={GAME_TITLES[gameType]}
             />
         })
-    }, [navigation, gameType])
+    }, [navigation, gameType, mistakes])
 
     useEffect(() => {
         if (deck) {
@@ -106,6 +107,7 @@ export default function Game() {
                 setFlippedCards([])
             } else {
                 // No match
+                setMistakes(prev => prev + 1)
                 setTimeout(() => {
                     newCards[firstCard].isFlipped = false
                     newCards[secondCard].isFlipped = false
@@ -154,6 +156,11 @@ export default function Game() {
             backgroundColor: theme.colors.background,
             flex: 1,
         }}>
+
+            <Text variant="headlineMedium" style={{ margin: 16 }}>
+                {mistakes} mistakes
+            </Text>
+
             <ScrollView>
                 <FlatList
                     data={cards}
