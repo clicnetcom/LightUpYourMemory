@@ -13,5 +13,11 @@ export declare global {
         type: DeckType
         cards: string[]
     }
+    type Achievement = {
+        id: string
+        title: string
+        description: string
+        icon: string
+    }
 
 }

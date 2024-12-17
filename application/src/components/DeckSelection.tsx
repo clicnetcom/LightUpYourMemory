@@ -20,7 +20,6 @@ export default function DeckSelection() {
         }
     }
 
-    console.log('cards', decks[0].cards[0].length)
     const renderPreview = (deck: Deck) => (
         <View style={{
             flexDirection: 'row',
