@@ -5,6 +5,8 @@ import { Drawer } from 'expo-router/drawer'
 import { DrawerToggleButton } from "@react-navigation/drawer"
 import { useTheme } from "@/useTheme"
 import { useEffect } from "react"
+import { auth } from "@/firebase"
+import { router } from "expo-router"
 
 export default function HomePage() {
     const theme = useTheme()
@@ -81,6 +83,20 @@ export default function HomePage() {
     useEffect(() => {
         console.log('setting decks')
         setDecks(decks)
+
+
+
+        auth.onAuthStateChanged((user) => {
+            console.log('user', user)
+            if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/v8/firebase.User
+                var uid = user.uid
+                // ...
+            } else {
+                router.replace('/login')
+            }
+        })
 
     }, [])
 
