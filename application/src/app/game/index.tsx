@@ -98,6 +98,8 @@ export default function Game() {
                 const data = snapshot.val()
                 if (data.stats) {
                     const newStats = {
+                        plays: data.stats.plays + 1,
+                        ties: data.stats.ties,
                         wins: win ? data.stats.wins + 1 : data.stats.wins,
                         losses: !win ? data.stats.losses + 1 : data.stats.losses,
                         time: gameType ? data.stats.time == 0 ? timer : Math.min(data.stats.time, timer) : data.stats.time,
