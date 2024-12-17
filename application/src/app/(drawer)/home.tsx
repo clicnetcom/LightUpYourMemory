@@ -45,7 +45,7 @@ export default function HomePage() {
                         data={[
                             { name: 'Single Player', type: 'single' },
                             { name: 'Time Attack', type: 'time-attack' },
-                            { name: 'versus AI', type: 'single-ai', online: true },
+                            { name: 'versus AI', type: 'single-ai' },
                             { name: 'versus Player', type: 'multiplayer', online: true },
                         ]}
                         renderItem={({ item }) => (
