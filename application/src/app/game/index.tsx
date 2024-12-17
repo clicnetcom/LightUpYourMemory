@@ -180,6 +180,21 @@ export default function Game() {
         return <DeckSelection />
     }
 
+    if (!deck) {
+        return (
+            <View style={{
+                backgroundColor: theme.colors.background,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <Text variant="headlineMedium" style={{ color: theme.colors.error }}>
+                    Invalid deck, redirecting home
+                </Text>
+            </View>
+        )
+    }
+
     return (
         <View style={{
             backgroundColor: theme.colors.background,
@@ -201,6 +216,7 @@ export default function Game() {
             </View>
 
             <CardView
+                deckType={deck.type}
                 cards={cards}
                 onCardPress={handleCardPress}
             />
