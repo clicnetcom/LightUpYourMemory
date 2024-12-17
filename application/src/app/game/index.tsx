@@ -10,6 +10,8 @@ import { Text, Portal, Modal, Button } from "react-native-paper"
 import CardView from "@/components/CardView"
 import EndScreen from "@/components/EndScreen"
 import { formatTime } from "@/utils"
+import { get, ref, set } from "firebase/database"
+import { database } from "@/firebase"
 
 const GAME_TITLES: Record<GameType, string> = {
     'single': 'Single Player',
@@ -31,6 +33,7 @@ export default function Game() {
     const local = useLocalSearchParams()
     const gameType = local?.type as GameType
 
+    const user = useStore(state => state.user)
     const [currentGame, setCurrentGame] = useStore(state => [
         state.currentGame, state.setCurrentGame])
     const deck = useStore(state => state.decks.find(deck => deck.id === currentGame?.deck))
@@ -87,6 +90,26 @@ export default function Game() {
         }
     }, [deck])
 
+    const finishGame = (win: boolean) => {
+        setIsRunning(false)
+        setIsGameComplete(true)
+        get(ref(database, `users/${user?.uid}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val()
+                if (data.stats) {
+                    const newStats = {
+                        wins: win ? data.stats.wins + 1 : data.stats.wins,
+                        losses: !win ? data.stats.losses + 1 : data.stats.losses,
+                        time: gameType ? data.stats.time == 0 ? timer : Math.min(data.stats.time, timer) : data.stats.time,
+                    }
+                    set(ref(database, `users/${user?.uid}/stats`), newStats)
+                }
+            }
+        }).catch((error) => {
+            console.error("Error fetching user data:", error)
+        })
+    }
+
     useEffect(() => {
         let intervalId: NodeJS.Timeout
         if (isRunning) {
@@ -99,9 +122,7 @@ export default function Game() {
 
     useEffect(() => {
         if (cards.length > 0 && cards.every(card => card.isMatched)) {
-            setIsRunning(false)
-            setIsGameComplete(true)
-            // save history
+            finishGame(true)
         }
     }, [cards])
 
@@ -132,8 +153,7 @@ export default function Game() {
                     setFlippedCards([])
                     setOpponentScore(prev => prev + 1)
                     if (newCards.every(card => card.isMatched)) {
-                        setIsRunning(false)
-                        setIsGameComplete(true)
+                        finishGame(false)
                     } else {
                         setTimeout(makeAIMove, 700)
                     }
