@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import { View, FlatList, useWindowDimensions, StyleSheet, Pressable, Animated } from "react-native"
 import { Text, Portal, Modal, Button } from "react-native-paper"
 import CardView from "@/components/CardView"
+import EndScreen from "@/components/EndScreen"
 
 const GAME_TITLES: Record<GameType, string> = {
     'single': 'Single Player',
@@ -102,11 +103,6 @@ export default function Game() {
         }
     }, [cards])
 
-    const formatTime = useCallback((time: number) => {
-        const minutes = Math.floor(time / 60)
-        const seconds = time % 60
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-    }, [])
 
     const handleCardPress = (cardId: number) => {
         if (flippedCards.length === 2 || cards[cardId].isMatched || cards[cardId].isFlipped) {
@@ -218,47 +214,13 @@ export default function Game() {
                 cards={cards}
                 onCardPress={handleCardPress}
             />
-
-            <Portal>
-                <Modal
-                    visible={isGameComplete}
-                    onDismiss={() => router.push('/home')}
-                    contentContainerStyle={{
-                        backgroundColor: theme.colors.background,
-                        padding: 20,
-                        margin: 20,
-                        borderRadius: 8,
-                    }}
-                >
-                    <Text variant="headlineMedium" style={{ marginBottom: 16 }}>
-                        Game Complete!
-                    </Text>
-                    <Text variant="titleMedium">
-                        Mistakes: {mistakes}
-                    </Text>
-                    {gameType === 'time-attack' && (
-                        <Text variant="titleMedium">
-                            Time: {formatTime(timer)}
-                        </Text>
-                    )}
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
-                        <Button
-                            mode="contained"
-                            onPress={handlePlayAgain}
-                            style={{ flex: 1, marginRight: 8 }}
-                        >
-                            Play Again
-                        </Button>
-                        <Button
-                            mode="outlined"
-                            onPress={() => router.push('/home')}
-                            style={{ flex: 1, marginLeft: 8 }}
-                        >
-                            Home
-                        </Button>
-                    </View>
-                </Modal>
-            </Portal>
+            <EndScreen
+                isGameComplete={isGameComplete}
+                mistakes={mistakes}
+                timer={timer}
+                gameType={gameType}
+                handlePlayAgain={handlePlayAgain}
+            />
         </View>
     )
 }
