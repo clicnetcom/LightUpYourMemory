@@ -128,6 +128,7 @@ export default function HomePage() {
                     }
                 }}
             />
+
             <View style={{
                 flex: 1,
                 alignItems: 'center',
@@ -138,12 +139,13 @@ export default function HomePage() {
                         data={[
                             { name: 'Single Player', type: 'single' },
                             { name: 'Time Attack', type: 'time-attack' },
-                            { name: 'versus AI', type: 'single-ai' },
-                            { name: 'versus Player', type: 'multiplayer' },
+                            { name: 'versus AI', type: 'single-ai', online: true },
+                            { name: 'versus Player', type: 'multiplayer', online: true },
                         ]}
                         renderItem={({ item }) => (
                             <CustomButton
                                 path={`/game`}
+                                disabled={!isConnected && item.online}
                                 params={{ type: item.type }}
                                 label={item.name} />
                         )}
@@ -153,12 +155,13 @@ export default function HomePage() {
                 <View style={{ width: CONTAINER_WIDTH }}>
                     <FlatList
                         data={[
-                            { name: 'Leaderboards', path: 'leaderboards' },
-                            { name: 'Achievements', type: 'achievements' },
+                            { name: 'Leaderboards', path: 'leaderboards', online: true },
+                            { name: 'Achievements', type: 'achievements', online: true },
                         ]}
                         renderItem={({ item }) => (
                             <CustomButton
                                 path={`/(drawer)/${item.path}`}
+                                disabled={!isConnected && item.online}
                                 label={item.name} />
                         )}
                     />
