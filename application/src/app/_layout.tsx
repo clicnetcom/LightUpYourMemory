@@ -7,7 +7,7 @@ import { router, Slot } from 'expo-router'
 import { auth, database } from '@/firebase'
 import { useStore } from '@/useStore'
 import NetInfo from '@react-native-community/netinfo'
-import { get, ref } from '@firebase/database'
+import { get, ref, set } from '@firebase/database'
 import { getStorageUrl } from '@/utils'
 
 export default function AppLayout() {
@@ -22,6 +22,25 @@ export default function AppLayout() {
         const unsubscribeAuth = auth.onAuthStateChanged((newUser) => {
             if (newUser) {
                 if (user?.uid !== newUser.uid) {
+                    const userRef = ref(database, `users/${newUser.uid}`)
+                    get(userRef).then((snapshot) => {
+                        if (!snapshot.exists()) {
+                            set(userRef, {
+                                name: newUser.displayName,
+                                email: newUser.email,
+                                photo: newUser.photoURL,
+                                achievements: [],
+                                stats: {
+                                    wins: 0,
+                                    losses: 0,
+                                    time: 0,
+                                }
+                            })
+                        }
+                    }
+                    ).catch((error) => {
+                        console.error("Error fetching user data:", error)
+                    })
                     setUser(newUser)
                 }
             } else {
