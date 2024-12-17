@@ -1,5 +1,5 @@
 import { useTheme } from "@/useTheme"
-import { View, ScrollView, FlatList, useWindowDimensions } from "react-native"
+import { View, ScrollView, FlatList, useWindowDimensions, Image } from "react-native"
 import { Text, Button } from "react-native-paper"
 import { useStore } from "@/useStore"
 
@@ -20,7 +20,7 @@ export default function DeckSelection() {
         }
     }
 
-    const renderPreview = (cards: string[]) => (
+    const renderPreview = (deck: Deck) => (
         <View style={{
             flexDirection: 'row',
             flexWrap: 'wrap',
@@ -28,7 +28,7 @@ export default function DeckSelection() {
             marginVertical: 12,
             marginHorizontal: 12,
         }}>
-            {cards.slice(0, 4).map((card, index) => (
+            {deck.cards.slice(0, 4).map((card, index) => (
                 <View
                     key={index}
                     style={{
@@ -41,7 +41,15 @@ export default function DeckSelection() {
                         alignItems: 'center',
                     }}
                 >
-                    <Text style={{ fontSize: PREVIEW_SIZE * 0.6 }}>{card}</Text>
+                    {deck.type === 'image' ?
+                        <Image
+                            source={{ uri: card }}
+                            style={{
+                                width: PREVIEW_SIZE * 0.8,
+                                height: PREVIEW_SIZE * 0.8,
+                            }}
+                        /> :
+                        <Text style={{ fontSize: PREVIEW_SIZE * 0.6 }}>{card}</Text>}
                 </View>
             ))}
         </View>
@@ -66,7 +74,6 @@ export default function DeckSelection() {
                 renderItem={({ item }) => (
                     <Button
                         key={item.id}
-                        // mode="outlined"
                         style={{
                             marginVertical: 8,
                             width: (width - 100) / 2,
@@ -78,7 +85,7 @@ export default function DeckSelection() {
                         <View style={{ alignItems: 'center' }}>
                             <Text variant="titleMedium">{item.title}</Text>
                             <Text variant="bodySmall">{item.description}</Text>
-                            {renderPreview(item.cards)}
+                            {renderPreview(item)}
                         </View>
                     </Button>
                 )}
