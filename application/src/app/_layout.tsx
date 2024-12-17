@@ -16,7 +16,7 @@ export default function AppLayout() {
     const setIsConnected = useStore(state => state.setIsConnected)
 
     useEffect(() => {
-        auth.onAuthStateChanged((newUser) => {
+        const unsubscribe = auth.onAuthStateChanged((newUser) => {
             if (newUser) {
                 if (user?.uid !== newUser.uid) {
                     setUser(newUser)
@@ -25,6 +25,8 @@ export default function AppLayout() {
                 router.replace('/login')
             }
         })
+
+        return () => unsubscribe()
     }, [])
 
     useEffect(() => {
