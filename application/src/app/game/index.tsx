@@ -9,6 +9,7 @@ import { View, FlatList, useWindowDimensions, StyleSheet, Pressable, Animated } 
 import { Text, Portal, Modal, Button } from "react-native-paper"
 import CardView from "@/components/CardView"
 import EndScreen from "@/components/EndScreen"
+import { formatTime } from "@/utils"
 
 const GAME_TITLES: Record<GameType, string> = {
     'single': 'Single Player',

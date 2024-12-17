@@ -1,11 +1,8 @@
 import { useTheme } from "@/useTheme"
+import { formatTime } from "@/utils"
 import { router } from "expo-router"
-import { useCallback } from "react"
 import { View, FlatList, useWindowDimensions, Pressable, Image } from "react-native"
 import { Text, Portal, Modal, Button } from "react-native-paper"
-
-
-
 
 type Props = {
     isGameComplete: boolean
@@ -18,13 +15,6 @@ type Props = {
 
 export default function EndScreen({ isGameComplete, mistakes, timer, gameType, handlePlayAgain }: Props) {
     const theme = useTheme()
-
-    const formatTime = useCallback((time: number) => {
-        const minutes = Math.floor(time / 60)
-        const seconds = time % 60
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-    }, [])
-
     return (<Portal>
         <Modal
             visible={isGameComplete}
