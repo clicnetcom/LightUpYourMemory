@@ -1,4 +1,4 @@
-import { View, FlatList, useWindowDimensions, Pressable } from "react-native"
+import { View, FlatList, useWindowDimensions, Pressable, Image } from "react-native"
 import { Text } from "react-native-paper"
 import { useTheme } from "@/useTheme"
 
@@ -9,10 +9,11 @@ type CardViewProps = {
         isMatched: boolean
         id: number
     }[]
-    onCardPress: (cardId: number) => void
+    onCardPress: (cardId: number) => void,
+    deckType: DeckType
 }
 
-export default function CardView({ cards, onCardPress }: CardViewProps) {
+export default function CardView({ cards, onCardPress, deckType }: CardViewProps) {
     const theme = useTheme()
     const { width, height } = useWindowDimensions()
     const AVAILABLE_HEIGHT = height - 150 // space for  header
@@ -71,7 +72,17 @@ export default function CardView({ cards, onCardPress }: CardViewProps) {
                             }}
                         >
                             {(item.isFlipped || item.isMatched) && (
-                                <Text style={{ fontSize: CARD_SIZE * 0.5 }}>{item.value}</Text>
+                                deckType === 'image' ? (
+                                    <Image
+                                        source={{ uri: item.value }}
+                                        style={{
+                                            width: CARD_SIZE * 0.8,
+                                            height: CARD_SIZE * 0.8,
+                                        }}
+                                    />
+                                ) : (
+                                    <Text style={{ fontSize: CARD_SIZE * 0.6 }}>{item.value}</Text>
+                                )
                             )}
                         </View>
                     </Pressable>
