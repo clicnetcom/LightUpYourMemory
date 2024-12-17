@@ -14,6 +14,7 @@ export default function HomePage() {
             id: 'emojis',
             title: 'Emojis',
             description: 'A deck of emojis',
+            type: 'string',
             cards: [
                 '😀', '❤️', '🎮', '🌟', '🎨',
                 '🎵', '🎪', '🎯', '🎲', '🎭',
@@ -23,6 +24,7 @@ export default function HomePage() {
             id: 'easy',
             title: 'Easy',
             description: 'For testing only',
+            type: 'string',
             cards: [
                 '😀', '❤️', '🎮'
             ]
@@ -31,6 +33,7 @@ export default function HomePage() {
             id: 'numbers',
             title: 'Numbers',
             description: 'A deck of numbers',
+            type: 'string',
             cards: [
                 '1', '2', '3', '4', '5',
                 '6', '7', '8', '9', '10'
@@ -40,6 +43,7 @@ export default function HomePage() {
             id: 'animals',
             title: 'Animals',
             description: 'A deck of animals',
+            type: 'image',
             cards: [
                 'https://picsum.photos/200',
                 'https://picsum.photos/205',
@@ -54,6 +58,7 @@ export default function HomePage() {
             id: 'verbs',
             title: 'Verbs',
             description: 'A deck of verbs',
+            type: 'string',
             cards: [
                 'run', 'jump', 'swim', 'fly', 'walk',
                 'sing', 'dance', 'read', 'write', 'paint'
