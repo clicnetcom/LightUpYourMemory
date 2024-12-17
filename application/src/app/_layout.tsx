@@ -73,3 +73,14 @@ export default function AppLayout() {
         </PaperProvider >
     )
 }
+
+const warn = console.warn
+function logError(...parameters: any) {
+    let filter = parameters.find((parameter: any) => {
+        return (
+            parameter.includes("deprecated")
+        )
+    })
+    if (!filter) warn(...parameters)
+}
+console.warn = logError
