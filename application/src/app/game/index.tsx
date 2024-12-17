@@ -31,10 +31,7 @@ export default function Game() {
 
     const [currentGame, setCurrentGame] = useStore(state => [
         state.currentGame, state.setCurrentGame])
-    const [deckModalVisible, setDeckModalVisible] = useState(true)
-
     const deck = useStore(state => state.decks.find(deck => deck.id === currentGame?.deck))
-
 
     const [cards, setCards] = useState<CardState[]>([])
     const [flippedCards, setFlippedCards] = useState<number[]>([])
@@ -101,6 +98,7 @@ export default function Game() {
         if (cards.length > 0 && cards.every(card => card.isMatched)) {
             setIsRunning(false)
             setIsGameComplete(true)
+            // save history
         }
     }, [cards])
 

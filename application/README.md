@@ -7,9 +7,6 @@
     - Firebase
 9. Add badges/achievements for specific milestones (e.g., "First Match", "Perfect Game")
 
-
-2. Singleplayer Mode
-4. Timer-based Scoring System gameplay mode: Implement a timer that starts when the game begins. Scores decrease as the timer progresses, incentivizing faster play.
 13. AI Opponent option for Singleplayer
 5. Offline gameplay Mode
 11. Dynamic Game Themes: Allow users to upload their own card designs or select from pre-built available themes (e.g., animals, emojis, flags).
