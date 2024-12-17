@@ -16,7 +16,7 @@ export default function AppLayout() {
     const setIsConnected = useStore(state => state.setIsConnected)
 
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((newUser) => {
+        const unsubscribeAuth = auth.onAuthStateChanged((newUser) => {
             if (newUser) {
                 if (user?.uid !== newUser.uid) {
                     setUser(newUser)
@@ -26,7 +26,14 @@ export default function AppLayout() {
             }
         })
 
-        return () => unsubscribe()
+        const unsubscribeNetInfo = NetInfo.addEventListener(state => {
+            setIsConnected(!!state.isConnected)
+        })
+
+        return () => {
+            unsubscribeAuth()
+            unsubscribeNetInfo()
+        }
     }, [])
 
     useEffect(() => {
