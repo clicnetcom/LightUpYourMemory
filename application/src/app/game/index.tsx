@@ -41,8 +41,7 @@ export default function Game() {
     const [timer, setTimer] = useState(0)
     const [isRunning, setIsRunning] = useState(true)
     const [isGameComplete, setIsGameComplete] = useState(false)
-
-    const { width } = useWindowDimensions()
+    const [isPlayerTurn, setIsPlayerTurn] = useState(true)
 
     useEffect(() => {
         return () => {
@@ -104,9 +103,46 @@ export default function Game() {
         }
     }, [cards])
 
+    const makeAIMove = useCallback(() => {
+        const unmatchedCards = cards.reduce((acc, card, index) => {
+            if (!card.isMatched) acc.push(index)
+            return acc
+        }, [] as number[])
+
+        if (unmatchedCards.length >= 2) {
+            const firstIndex = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)]
+            const newCards = [...cards]
+            newCards[firstIndex].isFlipped = true
+            setCards(newCards)
+            setFlippedCards([firstIndex])
+
+            setTimeout(() => {
+                const remainingCards = unmatchedCards.filter(i => i !== firstIndex)
+                const secondIndex = remainingCards[Math.floor(Math.random() * remainingCards.length)]
+                newCards[secondIndex].isFlipped = true
+                setCards(newCards)
+                setFlippedCards([firstIndex, secondIndex])
+
+                if (newCards[firstIndex].value === newCards[secondIndex].value) {
+                    newCards[firstIndex].isMatched = true
+                    newCards[secondIndex].isMatched = true
+                    setCards(newCards)
+                    setFlippedCards([])
+                } else {
+                    setTimeout(() => {
+                        newCards[firstIndex].isFlipped = false
+                        newCards[secondIndex].isFlipped = false
+                        setCards(newCards)
+                        setFlippedCards([])
+                        setIsPlayerTurn(true)
+                    }, 1000)
+                }
+            }, 500)
+        }
+    }, [cards])
 
     const handleCardPress = (cardId: number) => {
-        if (flippedCards.length === 2 || cards[cardId].isMatched || cards[cardId].isFlipped) {
+        if (!isPlayerTurn || flippedCards.length === 2 || cards[cardId].isMatched || cards[cardId].isFlipped) {
             return
         }
 
@@ -133,6 +169,10 @@ export default function Game() {
                     newCards[secondCard].isFlipped = false
                     setCards(newCards)
                     setFlippedCards([])
+                    if (gameType === 'single-ai') {
+                        setIsPlayerTurn(false)
+                        setTimeout(makeAIMove, 500)
+                    }
                 }, 1000)
             }
         }
@@ -143,6 +183,7 @@ export default function Game() {
         setMistakes(0)
         setTimer(0)
         setIsRunning(true)
+        setIsPlayerTurn(true)
         if (deck) {
             const shuffledCards = [...deck.cards, ...deck.cards]
                 .sort(() => Math.random() - 0.5)
