@@ -1,5 +1,5 @@
 import { useTheme } from "@/useTheme"
-import { View, ScrollView } from "react-native"
+import { View, ScrollView, Image } from "react-native"
 import { Text, Button } from "react-native-paper"
 import { useEffect, useState } from "react"
 import { database } from "@/firebase"
@@ -27,9 +27,9 @@ export default function Leaderboards() {
 
                 users.forEach((user: any) => {
                     const { wins, losses, time } = user.stats
-                    tempWins.push({ name: user.name, value: wins })
-                    tempLosses.push({ name: user.name, value: losses })
-                    tempTimeAttack.push({ name: user.name, value: time })
+                    tempWins.push({ name: user.name, value: wins, photo: user.photo })
+                    tempLosses.push({ name: user.name, value: losses, photo: user.photo })
+                    tempTimeAttack.push({ name: user.name, value: time, photo: user.photo })
                 })
 
                 setWins(tempWins.sort((a: any, b: any) => b.value - a.value))
@@ -41,7 +41,6 @@ export default function Leaderboards() {
         })
 
     }, [])
-
 
     return (
         <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
@@ -93,7 +92,25 @@ export default function Leaderboards() {
                             borderBottomColor: theme.colors.outlineVariant,
                             backgroundColor: index % 2 === 0 ? theme.colors.background : theme.colors.surfaceVariant,
                         }}>
-                            <Text style={{ width: 50, fontSize: 16 }}>#{index + 1}</Text>
+                            <Text style={{ width: 40, fontSize: 16 }}>#{index + 1}</Text>
+                            {item.photo ? (
+                                <Image
+                                    source={{ uri: item.photo }}
+                                    style={{
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 15,
+                                        marginRight: 8
+                                    }}
+                                />
+                            ) : (
+                                <Text style={{
+                                    fontSize: 24,
+                                    marginRight: 8
+                                }}>
+                                    👤
+                                </Text>
+                            )}
                             <Text style={{ flex: 1, fontSize: 16 }}>{item.name}</Text>
                             <Text style={{ width: 80, fontSize: 16 }}>
                                 {activeTab === 'timeAttack'
