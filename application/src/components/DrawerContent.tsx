@@ -7,16 +7,7 @@ import { auth } from '@/firebase'
 import { router } from 'expo-router'
 
 export default function CustomDrawerContent(props) {
-    const [userName, setUserName] = useState("")
-    const [userEmail, setUserEmail] = useState("")
-
-    useEffect(() => {
-        const user = auth.currentUser
-        if (user) {
-            setUserName(user.displayName || "")
-            setUserEmail(user.email || "")
-        }
-    }, [])
+    const user = useStore(state => state.user)
 
     const isAutoTheme = useStore(state => state.isAutoTheme)
     const setIsAutoTheme = useStore(state => state.setIsAutoTheme)
@@ -24,8 +15,6 @@ export default function CustomDrawerContent(props) {
 
     const isDarkTheme = useStore(state => state.isDarkTheme)
     const setIsDarkTheme = useStore(state => state.setIsDarkTheme)
-
-    const state = useStore()
 
     const handleLogout = async () => {
         setUser(null)
@@ -41,9 +30,14 @@ export default function CustomDrawerContent(props) {
         <View style={styles.drawerContent}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.userInfoSection}>
-                    <Avatar.Icon size={50} icon="account" style={{ marginBottom: 8 }} />
-                    <Text variant="titleMedium">{userName || "User"}</Text>
-                    <Text variant="bodySmall">{userEmail}</Text>
+                    {user?.photoURL &&
+                        <Avatar.Image size={50} source={{ uri: user.photoURL }} style={{ marginBottom: 8 }} />
+                    }
+                    {!user?.photoURL &&
+                        <Avatar.Icon size={50} icon={"account"} style={{ marginBottom: 8 }} />
+                    }
+                    <Text variant="titleMedium">{user?.displayName || "User"}</Text>
+                    <Text variant="bodySmall">{user?.email}</Text>
                 </View>
                 <Drawer.Section >
                     <DrawerItemList {...props} />
