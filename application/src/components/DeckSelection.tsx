@@ -1,5 +1,5 @@
 import { useTheme } from "@/useTheme"
-import { View, ScrollView } from "react-native"
+import { View, ScrollView, FlatList } from "react-native"
 import { Text, Button } from "react-native-paper"
 import { useStore } from "@/useStore"
 
@@ -28,19 +28,23 @@ export default function DeckSelection() {
             </Text>
 
             <ScrollView>
-                {decks.map(deck => (
-                    <Button
-                        key={deck.id}
-                        mode="outlined"
-                        style={{ marginVertical: 8 }}
-                        onPress={() => selectDeck(deck.id)}
-                    >
-                        <View>
-                            <Text variant="titleMedium">{deck.title}</Text>
-                            <Text variant="bodySmall">{deck.description}</Text>
-                        </View>
-                    </Button>
-                ))}
+                <FlatList
+                    numColumns={3}
+                    data={decks}
+                    renderItem={({ item }) => (
+                        <Button
+                            key={item.id}
+                            mode="outlined"
+                            style={{ marginVertical: 8 }}
+                            onPress={() => selectDeck(item.id)}
+                        >
+                            <View>
+                                <Text variant="titleMedium">{item.title}</Text>
+                                <Text variant="bodySmall">{item.description}</Text>
+                            </View>
+                        </Button>
+                    )}
+                />
             </ScrollView>
         </View>
     )
