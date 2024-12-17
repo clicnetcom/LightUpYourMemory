@@ -14,6 +14,8 @@ interface State {
     setDecks: (decks: Deck[]) => void,
     user: User | null,
     setUser: (user: User | null) => void,
+    isConnected: boolean,
+    setIsConnected: (isConnected: boolean) => void,
 }
 export const useStore = create<State>()(
     devtools(
@@ -29,6 +31,8 @@ export const useStore = create<State>()(
                 setDecks: (decks) => set({ decks }),
                 user: null,
                 setUser: (user) => set({ user }),
+                isConnected: true,
+                setIsConnected: (isConnected) => set({ isConnected }),
             }),
             {
                 name: 'main-state',

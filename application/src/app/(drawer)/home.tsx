@@ -4,13 +4,14 @@ import CustomButton from "@/components/CustomButton"
 import { Drawer } from 'expo-router/drawer'
 import { DrawerToggleButton } from "@react-navigation/drawer"
 import { useTheme } from "@/useTheme"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { auth } from "@/firebase"
 import { router } from "expo-router"
 
+import NetInfo from '@react-native-community/netinfo'
+
 export default function HomePage() {
     const theme = useTheme()
-    const setCurrentGame = useStore(state => state.setCurrentGame)
     const user = useStore(state => state.user)
     const setUser = useStore(state => state.setUser)
     const decks: Deck[] = [
@@ -81,12 +82,12 @@ export default function HomePage() {
         }
     ]
 
+    const [isConnected, setIsConnected] = useStore(state => [state.isConnected, state.setIsConnected])
+
     const setDecks = useStore(state => state.setDecks)
     useEffect(() => {
-        console.log('setting decks')
         setDecks(decks)
         auth.onAuthStateChanged((newUser) => {
-
             if (newUser) {
                 if (user?.uid !== newUser.uid) {
                     setUser(newUser)
@@ -96,6 +97,9 @@ export default function HomePage() {
             }
         })
 
+        NetInfo.fetch().then(state => {
+            setIsConnected(!!state.isConnected)
+        })
     }, [])
 
     const { width } = useWindowDimensions()
