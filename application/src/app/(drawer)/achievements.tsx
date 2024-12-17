@@ -1,10 +1,17 @@
 import { useTheme } from "@/useTheme"
+import { useEffect, useState } from "react"
 import { View, ScrollView } from "react-native"
 import { FlatList } from "react-native-gesture-handler"
 import { Text } from "react-native-paper"
+import { database } from "@/firebase"
+import { ref, get } from "firebase/database"
+import { useStore } from "@/useStore"
 
 export default function Achievements() {
     const theme = useTheme()
+    const user = useStore(state => state.user)
+    const [userAchievements, setUserAchievements] = useState<string[]>([])
+
     const achievements: Achievement[] = [
         {
             id: '0',
@@ -52,6 +59,24 @@ export default function Achievements() {
             icon: '⏱️'
         }
     ]
+
+    useEffect(() => {
+        if (!user) return
+
+        const userRef = ref(database, `users/${user.uid}`)
+        get(userRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val()
+                console.log('user data:', data)
+                if (data.achievements) {
+                    setUserAchievements(data.achievements)
+                }
+            }
+        }).catch((error) => {
+            console.error("Error fetching user data:", error)
+        })
+    }, [])
+
     return (
         <View
             style={{
