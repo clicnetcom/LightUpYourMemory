@@ -98,11 +98,12 @@ export default function Game() {
                 const data = snapshot.val()
                 if (data.stats) {
                     const newStats = {
-                        plays: data.stats.plays + 1,
-                        ties: data.stats.ties,
-                        wins: win ? data.stats.wins + 1 : data.stats.wins,
-                        losses: !win ? data.stats.losses + 1 : data.stats.losses,
-                        time: gameType ? data.stats.time == 0 ? timer : Math.min(data.stats.time, timer) : data.stats.time,
+                        plays: (data.stats.plays || 0) + 1,
+                        ties: (gameType === 'single-ai' || gameType === 'multiplayer') ? (data.stats.ties || 0) + (playerScore === opponentScore ? 1 : 0) : data.stats.ties,
+                        wins: win ? (data.stats.wins || 0) + 1 : data.stats.wins,
+                        losses: !win ? (data.stats.losses || 0) + 1 : data.stats.losses,
+                        time: gameType === 'time-attack' ? (data.stats.time || 0) == 0 ? timer : Math.min((data.stats.time || 0), timer) : data.stats.time,
+
                     }
                     set(ref(database, `users/${user?.uid}/stats`), newStats)
                 }
