@@ -131,6 +131,7 @@ export default function Game() {
                     setCards(newCards)
                     setFlippedCards([])
                     setOpponentScore(prev => prev + 1)
+                    setTimeout(makeAIMove, 700)
                 } else {
                     setTimeout(() => {
                         newCards[firstIndex].isFlipped = false
