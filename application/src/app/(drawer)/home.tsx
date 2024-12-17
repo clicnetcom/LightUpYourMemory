@@ -21,6 +21,17 @@ export default function HomePage() {
             ]
         },
         {
+            id: 'flags',
+            title: 'Flags',
+            description: 'A deck of flags',
+            type: 'image',
+            cards: ['https://flagsapi.com/BR/flat/64.png',
+                'https://flagsapi.com/US/flat/64.png',
+                'https://flagsapi.com/FR/flat/64.png',
+                'https://flagsapi.com/BE/flat/64.png',
+                'https://flagsapi.com/DE/flat/64.png',],
+        },
+        {
             id: 'easy',
             title: 'Easy',
             description: 'For testing only',
