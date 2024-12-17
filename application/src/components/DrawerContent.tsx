@@ -1,12 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
-import { Drawer, Switch, TouchableRipple, Text, Button } from 'react-native-paper'
+import { Drawer, Switch, TouchableRipple, Text, Button, Avatar } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import { useStore } from '@/useStore'
 import { auth } from '@/firebase'
 import { router } from 'expo-router'
 
-const CustomDrawerContent = (props: any) => {
+export default function CustomDrawerContent(props) {
+    const [userName, setUserName] = useState("")
+    const [userEmail, setUserEmail] = useState("")
+
+    useEffect(() => {
+        const user = auth.currentUser
+        if (user) {
+            setUserName(user.displayName || "")
+            setUserEmail(user.email || "")
+        }
+    }, [])
+
     const isAutoTheme = useStore(state => state.isAutoTheme)
     const setIsAutoTheme = useStore(state => state.setIsAutoTheme)
     const setUser = useStore(state => state.setUser)
@@ -27,8 +38,13 @@ const CustomDrawerContent = (props: any) => {
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={styles.drawerContent}>
             <DrawerContentScrollView {...props}>
+                <View style={styles.userInfoSection}>
+                    <Avatar.Icon size={50} icon="account" style={{ marginBottom: 8 }} />
+                    <Text variant="titleMedium">{userName || "User"}</Text>
+                    <Text variant="bodySmall">{userEmail}</Text>
+                </View>
                 <Drawer.Section >
                     <DrawerItemList {...props} />
                 </Drawer.Section>
@@ -99,6 +115,10 @@ const styles = StyleSheet.create({
         borderTopColor: '#f4f4f4',
         borderTopWidth: 1
     },
+    userInfoSection: {
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f4f4f4',
+        alignItems: 'center'
+    },
 })
-
-export default CustomDrawerContent
