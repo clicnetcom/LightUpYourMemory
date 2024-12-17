@@ -1,23 +1,12 @@
 # LightUpYourMemory
 
-6. Allow players to register/login and track their own highscores and completed games.
-    - Firebase auth
-
-1. Highscore List (Name, Score, Date)
-    - Firebase
 9. Add badges/achievements for specific milestones (e.g., "First Match", "Perfect Game")
 
-13. AI Opponent option for Singleplayer
-5. Offline gameplay Mode
-11. Dynamic Game Themes: Allow users to upload their own card designs or select from pre-built available themes (e.g., animals, emojis, flags).
+11. Dynamic Game Themes: Allow users to upload their own card designs
+
 10. Multilingual Support: Add support for at least three(3) languages, with an easy way to switch between them.
 
 3. Multiplayer Mode (Turn Based)
-7. Include a simple in-game chat system for the multiplayer mode.
+    7. Include a simple in-game chat system for the multiplayer mode.
 
 12. Admin UI to view Game Analytics
-
-# expo-template
-
-1. Use npm, not yarn
-2. Using jdk 17

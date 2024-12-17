@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
 import { Drawer, Switch, TouchableRipple, Text, Button, Avatar } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
@@ -6,7 +6,7 @@ import { useStore } from '@/useStore'
 import { auth } from '@/firebase'
 import { router } from 'expo-router'
 
-export default function CustomDrawerContent(props) {
+export default function CustomDrawerContent(props: any) {
     const user = useStore(state => state.user)
 
     const isAutoTheme = useStore(state => state.isAutoTheme)
