@@ -103,7 +103,6 @@ export default function Game() {
                         wins: win ? (data.stats.wins || 0) + 1 : data.stats.wins,
                         losses: !win ? (data.stats.losses || 0) + 1 : data.stats.losses,
                         time: gameType === 'time-attack' ? (data.stats.time || 0) == 0 ? timer : Math.min((data.stats.time || 0), timer) : data.stats.time,
-
                     }
                     set(ref(database, `users/${user?.uid}/stats`), newStats)
                 }
