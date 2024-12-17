@@ -20,6 +20,7 @@ export default function DeckSelection() {
         }
     }
 
+    console.log('cards', decks[0].cards[0].length)
     const renderPreview = (deck: Deck) => (
         <View style={{
             flexDirection: 'row',
@@ -41,15 +42,31 @@ export default function DeckSelection() {
                         alignItems: 'center',
                     }}
                 >
-                    {deck.type === 'image' ?
+                    {deck.type === 'image' &&
                         <Image
                             source={{ uri: card }}
                             style={{
                                 width: PREVIEW_SIZE * 0.8,
                                 height: PREVIEW_SIZE * 0.8,
                             }}
-                        /> :
-                        <Text style={{ fontSize: PREVIEW_SIZE * 0.6 }}>{card}</Text>}
+                        />
+                    }
+
+                    {deck.type === 'string' && card.length === 2 &&
+                        <Text style={{ fontSize: PREVIEW_SIZE * 0.6 }}>
+                            {card}
+                        </Text>
+                    }
+                    {deck.type === 'string' && card.length === 1 &&
+                        <Text style={{ fontSize: PREVIEW_SIZE * 0.9 }}>
+                            {card}
+                        </Text>
+                    }
+                    {deck.type === 'string' && card.length > 2 &&
+                        <Text style={{ fontSize: PREVIEW_SIZE * 1.4 / card.length }}>
+                            {card}
+                        </Text>
+                    }
                 </View>
             ))}
         </View>
