@@ -1,5 +1,5 @@
 import { useTheme } from "@/useTheme"
-import { View, ScrollView, FlatList } from "react-native"
+import { View, ScrollView, FlatList, useWindowDimensions } from "react-native"
 import { Text, Button } from "react-native-paper"
 import { useStore } from "@/useStore"
 
@@ -7,6 +7,9 @@ export default function DeckSelection() {
     const theme = useTheme()
     const [currentGame, setCurrentGame] = useStore(state => [state.currentGame, state.setCurrentGame])
     const decks = useStore(state => state.decks)
+    const { width } = useWindowDimensions()
+    const PREVIEW_SIZE = 70
+    const CARD_MARGIN = 3
 
     const selectDeck = (deckId: string) => {
         if (currentGame) {
@@ -17,35 +20,69 @@ export default function DeckSelection() {
         }
     }
 
+    const renderPreview = (cards: string[]) => (
+        <View style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            width: PREVIEW_SIZE * 2 + CARD_MARGIN * 4,
+            marginVertical: 12,
+            marginHorizontal: 12,
+        }}>
+            {cards.slice(0, 4).map((card, index) => (
+                <View
+                    key={index}
+                    style={{
+                        width: PREVIEW_SIZE,
+                        height: PREVIEW_SIZE,
+                        margin: CARD_MARGIN,
+                        backgroundColor: theme.colors.primary,
+                        borderRadius: 4,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Text style={{ fontSize: PREVIEW_SIZE * 0.6 }}>{card}</Text>
+                </View>
+            ))}
+        </View>
+    )
+
     return (
         <View style={{
             backgroundColor: theme.colors.background,
-            padding: 20,
+            padding: 50,
             flex: 1,
         }}>
             <Text variant="headlineMedium" style={{ marginBottom: 16 }}>
                 Select a deck:
             </Text>
 
-            <ScrollView>
-                <FlatList
-                    numColumns={3}
-                    data={decks}
-                    renderItem={({ item }) => (
-                        <Button
-                            key={item.id}
-                            mode="outlined"
-                            style={{ marginVertical: 8 }}
-                            onPress={() => selectDeck(item.id)}
-                        >
-                            <View>
-                                <Text variant="titleMedium">{item.title}</Text>
-                                <Text variant="bodySmall">{item.description}</Text>
-                            </View>
-                        </Button>
-                    )}
-                />
-            </ScrollView>
+            <FlatList
+                data={decks}
+                numColumns={2}
+                columnWrapperStyle={{
+                    justifyContent: 'space-between',
+                }}
+                renderItem={({ item }) => (
+                    <Button
+                        key={item.id}
+                        // mode="outlined"
+                        style={{
+                            marginVertical: 8,
+                            width: (width - 100) / 2,
+                            alignItems: 'center',
+                            padding: 8,
+                        }}
+                        onPress={() => selectDeck(item.id)}
+                    >
+                        <View style={{ alignItems: 'center' }}>
+                            <Text variant="titleMedium">{item.title}</Text>
+                            <Text variant="bodySmall">{item.description}</Text>
+                            {renderPreview(item.cards)}
+                        </View>
+                    </Button>
+                )}
+            />
         </View>
     )
 }
