@@ -81,7 +81,11 @@ export default function CardView({ cards, onCardPress, deckType }: CardViewProps
                                         }}
                                     />
                                 ) : (
-                                    <Text style={{ fontSize: CARD_SIZE * 0.6 }}>{item.value}</Text>
+                                    item.value.length >= 2 ? (
+                                        <Text style={{ fontSize: CARD_SIZE * 0.3 }}>{item.value}</Text>
+                                    ) : (
+                                        <Text style={{ fontSize: CARD_SIZE * 0.9 }}>{item.value}</Text>
+                                    )
                                 )
                             )}
                         </View>
