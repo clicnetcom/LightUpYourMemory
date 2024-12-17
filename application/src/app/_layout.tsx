@@ -33,8 +33,8 @@ export default function AppLayout() {
             setIsConnected(!!state.isConnected)
         })
 
-        const decksRef = ref(database, 'decks')
-        get(decksRef).then(async (snapshot) => {
+
+        get(ref(database, 'decks')).then(async (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val()
                 const existingDeckIds = new Set(decks.map(deck => deck.id))
@@ -53,6 +53,15 @@ export default function AppLayout() {
             }
         }).catch((error) => {
             console.error("Error fetching decks:", error)
+        })
+
+        get(ref(database, 'achievements')).then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val()
+                useStore.setState({ achievements: data })
+            }
+        }).catch((error) => {
+            console.error("Error fetching achievements:", error)
         })
 
         return () => {
