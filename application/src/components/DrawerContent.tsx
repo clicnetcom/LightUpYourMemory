@@ -9,6 +9,7 @@ import { router } from 'expo-router'
 const CustomDrawerContent = (props: any) => {
     const isAutoTheme = useStore(state => state.isAutoTheme)
     const setIsAutoTheme = useStore(state => state.setIsAutoTheme)
+    const setUser = useStore(state => state.setUser)
 
     const isDarkTheme = useStore(state => state.isDarkTheme)
     const setIsDarkTheme = useStore(state => state.setIsDarkTheme)
@@ -16,6 +17,7 @@ const CustomDrawerContent = (props: any) => {
     const state = useStore()
 
     const handleLogout = async () => {
+        setUser(null)
         try {
             await auth.signOut()
             router.replace('/login')

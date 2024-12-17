@@ -11,6 +11,8 @@ import { router } from "expo-router"
 export default function HomePage() {
     const theme = useTheme()
     const setCurrentGame = useStore(state => state.setCurrentGame)
+    const user = useStore(state => state.user)
+    const setUser = useStore(state => state.setUser)
     const decks: Deck[] = [
         {
             id: 'emojis',
@@ -83,16 +85,12 @@ export default function HomePage() {
     useEffect(() => {
         console.log('setting decks')
         setDecks(decks)
+        auth.onAuthStateChanged((newUser) => {
 
-
-
-        auth.onAuthStateChanged((user) => {
-            console.log('user', user)
-            if (user) {
-                // User is signed in, see docs for a list of available properties
-                // https://firebase.google.com/docs/reference/js/v8/firebase.User
-                var uid = user.uid
-                // ...
+            if (newUser) {
+                if (user?.uid !== newUser.uid) {
+                    setUser(newUser)
+                }
             } else {
                 router.replace('/login')
             }

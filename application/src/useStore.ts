@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createJSONStorage, devtools, persist } from 'zustand/middleware'
+import { User } from 'firebase/auth'
 
 interface State {
     isAutoTheme: boolean,
@@ -11,6 +12,8 @@ interface State {
     setCurrentGame: (game: Game | null) => void,
     decks: Deck[],
     setDecks: (decks: Deck[]) => void,
+    user: User | null,
+    setUser: (user: User | null) => void,
 }
 export const useStore = create<State>()(
     devtools(
@@ -24,6 +27,8 @@ export const useStore = create<State>()(
                 setCurrentGame: (game) => set({ currentGame: game }),
                 decks: [],
                 setDecks: (decks) => set({ decks }),
+                user: null,
+                setUser: (user) => set({ user }),
             }),
             {
                 name: 'main-state',
