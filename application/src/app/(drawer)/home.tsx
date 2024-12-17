@@ -145,6 +145,20 @@ export default function HomePage() {
                         )}
                     />
                 </View>
+                <View style={{ height: 50 }} />
+                <View style={{ width: CONTAINER_WIDTH }}>
+                    <FlatList
+                        data={[
+                            { name: 'Leaderboards', path: 'leaderboards' },
+                            { name: 'Achievements', type: 'achievements' },
+                        ]}
+                        renderItem={({ item }) => (
+                            <CustomButton
+                                path={`/(drawer)/${item.path}`}
+                                label={item.name} />
+                        )}
+                    />
+                </View>
             </View>
         </View>
     )

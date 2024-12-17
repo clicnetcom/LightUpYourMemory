@@ -15,11 +15,23 @@ export default function AppLayout() {
             headerShown: false
         },
         {
+            name: 'leaderboards',
+            drawerLabel: 'Leaderboards',
+            headerTitle: 'Leaderboards',
+            headerShown: true
+        },
+        {
+            name: 'achievements',
+            drawerLabel: 'Achievements',
+            headerTitle: 'Achievements',
+            headerShown: true
+        },
+        {
             name: 'about',
             drawerLabel: 'About the Application',
             headerTitle: 'About the Application',
             headerShown: true
-        }
+        },
     ]
     const hiddenScreens: string[] = []
 
