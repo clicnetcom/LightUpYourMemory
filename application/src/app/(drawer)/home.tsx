@@ -156,7 +156,7 @@ export default function HomePage() {
                     <FlatList
                         data={[
                             { name: 'Leaderboards', path: 'leaderboards', online: true },
-                            { name: 'Achievements', type: 'achievements', online: true },
+                            { name: 'Achievements', path: 'achievements', online: true },
                         ]}
                         renderItem={({ item }) => (
                             <CustomButton
