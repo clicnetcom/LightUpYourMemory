@@ -33,26 +33,27 @@ export default function AppLayout() {
             setIsConnected(!!state.isConnected)
         })
 
-
         const decksRef = ref(database, 'decks')
         get(decksRef).then(async (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val()
-                const promises = data.map(async (deck: any) => {
+                const existingDeckIds = new Set(decks.map(deck => deck.id))
+                const newDecksData = data.filter((deck: any) => !existingDeckIds.has(deck.id))
+
+                if (newDecksData.length === 0) return
+
+                const promises = newDecksData.map(async (deck: any) => {
                     if (deck.type === 'image' && deck.cards[0].startsWith('gs://')) {
                         deck.cards = await Promise.all(deck.cards.map(async (card: string) => await getStorageUrl(card)))
                     }
                     return deck
                 })
-
                 const newDecks = await Promise.all(promises)
-                setDecks(newDecks)
+                setDecks([...decks, ...newDecks])
             }
         }).catch((error) => {
             console.error("Error fetching decks:", error)
         })
-
-
 
         return () => {
             unsubscribeAuth()
