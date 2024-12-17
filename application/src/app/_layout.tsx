@@ -3,11 +3,29 @@ import { setStatusBarStyle } from 'expo-status-bar'
 import { useEffect } from 'react'
 import { PaperProvider } from 'react-native-paper'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { Slot } from 'expo-router'
+import { router, Slot } from 'expo-router'
+import { auth } from '@/firebase'
+import { useStore } from '@/useStore'
+import NetInfo from '@react-native-community/netinfo'
 
 export default function AppLayout() {
     const theme = useTheme()
     const mode = useInvertedThemeMode()
+
+    const [user, setUser] = useStore(state => [state.user, state.setUser])
+    const setIsConnected = useStore(state => state.setIsConnected)
+
+    useEffect(() => {
+        auth.onAuthStateChanged((newUser) => {
+            if (newUser) {
+                if (user?.uid !== newUser.uid) {
+                    setUser(newUser)
+                }
+            } else {
+                router.replace('/login')
+            }
+        })
+    }, [])
 
     useEffect(() => {
         setStatusBarStyle(mode)
