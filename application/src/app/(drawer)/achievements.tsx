@@ -10,55 +10,8 @@ import { useStore } from "@/useStore"
 export default function Achievements() {
     const theme = useTheme()
     const user = useStore(state => state.user)
+    const achievements = useStore(state => state.achievements)
     const [userAchievements, setUserAchievements] = useState<string[]>([])
-
-    const achievements: Achievement[] = [
-        {
-            id: '0',
-            title: 'First game played',
-            icon: '🎮'
-        }, {
-            id: '1',
-            title: 'First game won',
-            icon: '🏆'
-        }, {
-            id: '2',
-            title: 'First game lost',
-            icon: '😢'
-        }, {
-            id: '3',
-            title: 'First game tied',
-            icon: '😐'
-        }, {
-            id: '4',
-            title: '10 games played',
-            icon: '🔟'
-        }, {
-            id: '5',
-            title: '10 games won',
-            icon: '🥇'
-        }, {
-            id: '6',
-            title: '10 games lost',
-            icon: '💔'
-        }, {
-            id: '7',
-            title: '10 games tied',
-            icon: '😐'
-        }, {
-            id: '8',
-            title: '100 games played',
-            icon: '💯'
-        }, {
-            id: '9',
-            title: 'Perfect game',
-            icon: '🌟'
-        }, {
-            id: '10',
-            title: 'Under 10 seconds',
-            icon: '⏱️'
-        }
-    ]
 
     useEffect(() => {
         if (!user) return
@@ -84,11 +37,19 @@ export default function Achievements() {
                 flex: 1,
             }}
         >
-
-            <ScrollView>
-
+            <ScrollView
+                contentContainerStyle={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingVertical: 20
+                }}
+            >
                 <FlatList
                     data={achievements}
+                    style={{
+                        width: '90%',
+                        maxWidth: 500,
+                    }}
                     renderItem={({ item }) => (
                         <View
                             style={{
@@ -97,19 +58,23 @@ export default function Achievements() {
                                 padding: 20,
                                 borderBottomWidth: 1,
                                 borderBottomColor: theme.colors.onPrimary,
+                                opacity: userAchievements.includes(item.id) ? 1 : 0.5,
                             }}
                         >
                             <Text style={{ fontSize: 24, marginRight: 16 }}>
                                 {item.icon}
                             </Text>
-                            <Text style={{ fontSize: 20 }}>
+                            <Text style={{ fontSize: 20, flex: 1 }}>
                                 {item.title}
                             </Text>
+                            {userAchievements.includes(item.id) && (
+                                <Text style={{ fontSize: 24, color: 'green' }}>
+                                    ✓
+                                </Text>
+                            )}
                         </View>
                     )}
-
                 />
-
             </ScrollView>
         </View>
     )

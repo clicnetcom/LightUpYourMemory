@@ -14,73 +14,7 @@ export default function HomePage() {
     const theme = useTheme()
     const user = useStore(state => state.user)
     const setUser = useStore(state => state.setUser)
-    const decks: Deck[] = [
-        {
-            id: 'emojis',
-            title: 'Emojis',
-            description: 'A deck of emojis',
-            type: 'string',
-            cards: [
-                '😀', '❤️', '🎮', '🌟', '🎨',
-                '🎵', '🎪', '🎯', '🎲', '🎭',
-            ]
-        },
-        {
-            id: 'flags',
-            title: 'Flags',
-            description: 'A deck of flags',
-            type: 'image',
-            cards: ['https://flagsapi.com/BR/flat/64.png',
-                'https://flagsapi.com/US/flat/64.png',
-                'https://flagsapi.com/FR/flat/64.png',
-                'https://flagsapi.com/BE/flat/64.png',
-                'https://flagsapi.com/DE/flat/64.png',],
-        },
-        {
-            id: 'easy',
-            title: 'Easy',
-            description: 'For testing only',
-            type: 'string',
-            cards: [
-                '😀', '❤️', '🎮'
-            ]
-        },
-        {
-            id: 'numbers',
-            title: 'Numbers',
-            description: 'A deck of numbers',
-            type: 'string',
-            cards: [
-                '1', '2', '3', '4', '5',
-                '6', '7', '8', '9', '10'
-            ]
-        },
-        {
-            id: 'animals',
-            title: 'Animals',
-            description: 'A deck of animals',
-            type: 'image',
-            cards: [
-                'https://picsum.photos/200',
-                'https://picsum.photos/205',
-                'https://picsum.photos/210',
-                'https://picsum.photos/215',
-                'https://picsum.photos/220',
-                'https://picsum.photos/225',
-
-            ]
-        },
-        {
-            id: 'verbs',
-            title: 'Verbs',
-            description: 'A deck of verbs',
-            type: 'string',
-            cards: [
-                'run', 'jump', 'swim', 'fly', 'walk',
-                'sing', 'dance', 'read', 'write', 'paint'
-            ]
-        }
-    ]
+    const decks = useStore(state => state.decks)
 
     const [isConnected, setIsConnected] = useStore(state => [state.isConnected, state.setIsConnected])
 
