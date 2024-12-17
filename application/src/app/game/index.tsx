@@ -42,6 +42,8 @@ export default function Game() {
     const [isRunning, setIsRunning] = useState(true)
     const [isGameComplete, setIsGameComplete] = useState(false)
     const [isPlayerTurn, setIsPlayerTurn] = useState(true)
+    const [playerScore, setPlayerScore] = useState(0)
+    const [opponentScore, setOpponentScore] = useState(0)
 
     useEffect(() => {
         return () => {
@@ -128,6 +130,7 @@ export default function Game() {
                     newCards[secondIndex].isMatched = true
                     setCards(newCards)
                     setFlippedCards([])
+                    setOpponentScore(prev => prev + 1)
                 } else {
                     setTimeout(() => {
                         newCards[firstIndex].isFlipped = false
@@ -161,6 +164,7 @@ export default function Game() {
                 newCards[secondCard].isMatched = true
                 setCards(newCards)
                 setFlippedCards([])
+                setPlayerScore(prev => prev + 1)
             } else {
                 // No match
                 setMistakes(prev => prev + 1)
@@ -184,6 +188,8 @@ export default function Game() {
         setTimer(0)
         setIsRunning(true)
         setIsPlayerTurn(true)
+        setPlayerScore(0)
+        setOpponentScore(0)
         if (deck) {
             const shuffledCards = [...deck.cards, ...deck.cards]
                 .sort(() => Math.random() - 0.5)
@@ -281,7 +287,7 @@ export default function Game() {
                     alignItems: 'center',
                 }}>
                     <Text variant="headlineMedium">
-                        {'0x0'}
+                        {`${playerScore}x${opponentScore}`}
                     </Text>
                 </View>
                 <View style={{
