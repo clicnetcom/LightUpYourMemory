@@ -260,25 +260,35 @@ export default function Game() {
                 justifyContent: 'space-evenly',
                 alignItems: 'center'
             }}>
-                <Text variant="headlineMedium"
-                    style={{
-                        color: isPlayerTurn ? theme.colors.primary : theme.colors.secondary,
-                        borderWidth: isPlayerTurn ? 2 : 0,
-                        borderColor: theme.colors.primary
-                    }}>
-                    {'You'}
-                </Text>
+                <View style={{
+                    backgroundColor: isPlayerTurn ? theme.colors.primary : 'transparent',
+                    padding: 12,
+                    borderRadius: 8,
+                    opacity: isPlayerTurn ? 1 : 0.5,
+                }}>
+                    <Text variant="headlineMedium"
+                        style={{
+                            color: isPlayerTurn ? theme.colors.onPrimary : theme.colors.onBackground,
+                        }}>
+                        {'You'}
+                    </Text>
+                </View>
                 <Text variant="headlineMedium">
                     {'0x0'}
                 </Text>
-                <Text variant="headlineMedium"
-                    style={{
-                        color: !isPlayerTurn ? theme.colors.primary : theme.colors.secondary,
-                        borderWidth: !isPlayerTurn ? 2 : 0,
-                        borderColor: theme.colors.primary
-                    }}>
-                    {'Opponent'}
-                </Text>
+                <View style={{
+                    backgroundColor: !isPlayerTurn ? theme.colors.primary : 'transparent',
+                    padding: 12,
+                    borderRadius: 8,
+                    opacity: !isPlayerTurn ? 1 : 0.5,
+                }}>
+                    <Text variant="headlineMedium"
+                        style={{
+                            color: !isPlayerTurn ? theme.colors.onPrimary : theme.colors.onBackground,
+                        }}>
+                        {'Opponent'}
+                    </Text>
+                </View>
             </View>}
 
             <CardView
