@@ -236,20 +236,50 @@ export default function Game() {
             backgroundColor: theme.colors.background,
             flex: 1,
         }}>
-            <View style={{
+
+            {(gameType === 'time-attack' || gameType === 'single') &&
+                <View style={{
+                    margin: 16,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
+                    <Text variant="headlineMedium">
+                        {mistakes} mistakes
+                    </Text>
+                    {gameType === 'time-attack' &&
+                        <Text variant="headlineMedium">
+                            {formatTime(timer)}
+                        </Text>}
+                </View>
+            }
+
+            {gameType === 'single-ai' && <View style={{
                 margin: 16,
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                justifyContent: 'space-evenly',
                 alignItems: 'center'
             }}>
-                <Text variant="headlineMedium">
-                    {mistakes} mistakes
+                <Text variant="headlineMedium"
+                    style={{
+                        color: isPlayerTurn ? theme.colors.primary : theme.colors.secondary,
+                        borderWidth: isPlayerTurn ? 2 : 0,
+                        borderColor: theme.colors.primary
+                    }}>
+                    {'You'}
                 </Text>
-                {gameType === 'time-attack' &&
-                    <Text variant="headlineMedium">
-                        {formatTime(timer)}
-                    </Text>}
-            </View>
+                <Text variant="headlineMedium">
+                    {'0x0'}
+                </Text>
+                <Text variant="headlineMedium"
+                    style={{
+                        color: !isPlayerTurn ? theme.colors.primary : theme.colors.secondary,
+                        borderWidth: !isPlayerTurn ? 2 : 0,
+                        borderColor: theme.colors.primary
+                    }}>
+                    {'Opponent'}
+                </Text>
+            </View>}
 
             <CardView
                 deckType={deck.type}
