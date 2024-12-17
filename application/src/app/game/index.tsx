@@ -258,13 +258,16 @@ export default function Game() {
                 margin: 16,
                 flexDirection: 'row',
                 justifyContent: 'space-evenly',
-                alignItems: 'center'
+                alignItems: 'center',
+                paddingHorizontal: 16,
             }}>
                 <View style={{
+                    flex: 2,
                     backgroundColor: isPlayerTurn ? theme.colors.primary : 'transparent',
                     padding: 12,
                     borderRadius: 8,
                     opacity: isPlayerTurn ? 1 : 0.5,
+                    alignItems: 'center',
                 }}>
                     <Text variant="headlineMedium"
                         style={{
@@ -273,14 +276,21 @@ export default function Game() {
                         {'You'}
                     </Text>
                 </View>
-                <Text variant="headlineMedium">
-                    {'0x0'}
-                </Text>
                 <View style={{
+                    flex: 1,
+                    alignItems: 'center',
+                }}>
+                    <Text variant="headlineMedium">
+                        {'0x0'}
+                    </Text>
+                </View>
+                <View style={{
+                    flex: 2,
                     backgroundColor: !isPlayerTurn ? theme.colors.primary : 'transparent',
                     padding: 12,
                     borderRadius: 8,
                     opacity: !isPlayerTurn ? 1 : 0.5,
+                    alignItems: 'center',
                 }}>
                     <Text variant="headlineMedium"
                         style={{
