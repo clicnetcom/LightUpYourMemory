@@ -19,7 +19,6 @@ export default function Achievements() {
         get(ref(database, `users/${user.uid}`)).then((snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val()
-                console.log('user data:', data)
                 if (data.achievements) {
                     setUserAchievements(data.achievements)
                 }

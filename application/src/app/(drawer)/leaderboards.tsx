@@ -35,8 +35,6 @@ export default function Leaderboards() {
                 setWins(tempWins.sort((a: any, b: any) => b.value - a.value))
                 setLosses(tempLosses.sort((a: any, b: any) => b.value - a.value))
                 setTimeAttack(tempTimeAttack.sort((a: any, b: any) => a.value - b.value))
-
-                console.log('data:', data)
             }
         }).catch((error) => {
             console.error("Error fetching users:", error)
