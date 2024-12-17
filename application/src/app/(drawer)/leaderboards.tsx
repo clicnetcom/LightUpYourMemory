@@ -71,28 +71,39 @@ export default function Leaderboards() {
                 </Button>
             </View>
             <ScrollView>
+                <View style={{
+                    flexDirection: 'row',
+                    padding: 16,
+                    backgroundColor: theme.colors.primaryContainer,
+                    borderBottomWidth: 2,
+                    borderBottomColor: theme.colors.primary,
+                }}>
+                    <Text style={{ width: 50, fontSize: 18, fontWeight: 'bold' }}>Rank</Text>
+                    <Text style={{ flex: 1, fontSize: 18, fontWeight: 'bold' }}>Player</Text>
+                    <Text style={{ width: 80, fontSize: 18, fontWeight: 'bold' }}>
+                        {activeTab === 'timeAttack' ? 'Time' : 'Count'}
+                    </Text>
+                </View>
                 <FlatList
                     data={activeTab === 'wins' ? wins : activeTab === 'losses' ? losses : timeAttack}
                     renderItem={({ item, index }) => (
                         <View style={{
                             flexDirection: 'row',
                             alignItems: 'center',
-                            padding: 20,
+                            padding: 16,
                             borderBottomWidth: 1,
-                            borderBottomColor: theme.colors.onPrimary,
+                            borderBottomColor: theme.colors.outlineVariant,
+                            backgroundColor: index % 2 === 0 ? theme.colors.background : theme.colors.surfaceVariant,
                         }}>
-                            <Text style={{ fontSize: 24, marginRight: 16 }}>
-                                {index + 1}
-                            </Text>
-                            <Text style={{ fontSize: 24, marginRight: 16 }}>
-                                {item.name}
-                            </Text>
-                            <Text style={{ fontSize: 20, flex: 1 }}>
-                                {item.value}
+                            <Text style={{ width: 50, fontSize: 16 }}>#{index + 1}</Text>
+                            <Text style={{ flex: 1, fontSize: 16 }}>{item.name}</Text>
+                            <Text style={{ width: 80, fontSize: 16 }}>
+                                {activeTab === 'timeAttack'
+                                    ? `${Math.floor(item.value / 60)}:${(item.value % 60).toString().padStart(2, '0')}`
+                                    : item.value}
                             </Text>
                         </View>
                     )}
-
                 />
             </ScrollView>
         </View>
