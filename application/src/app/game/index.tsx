@@ -131,7 +131,12 @@ export default function Game() {
                     setCards(newCards)
                     setFlippedCards([])
                     setOpponentScore(prev => prev + 1)
-                    setTimeout(makeAIMove, 700)
+                    if (newCards.every(card => card.isMatched)) {
+                        setIsRunning(false)
+                        setIsGameComplete(true)
+                    } else {
+                        setTimeout(makeAIMove, 700)
+                    }
                 } else {
                     setTimeout(() => {
                         newCards[firstIndex].isFlipped = false
@@ -319,6 +324,8 @@ export default function Game() {
                 timer={timer}
                 gameType={gameType}
                 handlePlayAgain={handlePlayAgain}
+                playerScore={playerScore}
+                opponentScore={opponentScore}
             />
         </View>
     )
