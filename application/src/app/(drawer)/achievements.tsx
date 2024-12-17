@@ -1,5 +1,6 @@
 import { useTheme } from "@/useTheme"
 import { View, ScrollView } from "react-native"
+import { FlatList } from "react-native-gesture-handler"
 import { Text } from "react-native-paper"
 
 export default function Achievements() {
@@ -61,9 +62,28 @@ export default function Achievements() {
 
             <ScrollView>
 
-                <Text variant="headlineMedium">
-                    achievements
-                </Text>
+                <FlatList
+                    data={achievements}
+                    renderItem={({ item }) => (
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                padding: 20,
+                                borderBottomWidth: 1,
+                                borderBottomColor: theme.colors.onPrimary,
+                            }}
+                        >
+                            <Text style={{ fontSize: 24, marginRight: 16 }}>
+                                {item.icon}
+                            </Text>
+                            <Text style={{ fontSize: 20 }}>
+                                {item.title}
+                            </Text>
+                        </View>
+                    )}
+
+                />
 
             </ScrollView>
         </View>
