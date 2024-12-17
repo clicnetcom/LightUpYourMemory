@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { database } from "@/firebase"
 import { useStore } from "@/useStore"
 import { get, ref } from "firebase/database"
+import { FlatList } from "react-native-gesture-handler"
 
 export default function Leaderboards() {
     const theme = useTheme()
@@ -70,7 +71,29 @@ export default function Leaderboards() {
                 </Button>
             </View>
             <ScrollView>
-                <Text variant="bodyLarge">Wins Leaderboard Content</Text>
+                <FlatList
+                    data={activeTab === 'wins' ? wins : activeTab === 'losses' ? losses : timeAttack}
+                    renderItem={({ item, index }) => (
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            padding: 20,
+                            borderBottomWidth: 1,
+                            borderBottomColor: theme.colors.onPrimary,
+                        }}>
+                            <Text style={{ fontSize: 24, marginRight: 16 }}>
+                                {index + 1}
+                            </Text>
+                            <Text style={{ fontSize: 24, marginRight: 16 }}>
+                                {item.name}
+                            </Text>
+                            <Text style={{ fontSize: 20, flex: 1 }}>
+                                {item.value}
+                            </Text>
+                        </View>
+                    )}
+
+                />
             </ScrollView>
         </View>
     )
