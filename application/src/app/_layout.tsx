@@ -4,9 +4,11 @@ import { useEffect } from 'react'
 import { PaperProvider } from 'react-native-paper'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { router, Slot } from 'expo-router'
-import { auth } from '@/firebase'
+import { auth, database } from '@/firebase'
 import { useStore } from '@/useStore'
 import NetInfo from '@react-native-community/netinfo'
+import { get, ref } from '@firebase/database'
+import { getStorageUrl } from '@/utils'
 
 export default function AppLayout() {
     const theme = useTheme()
@@ -14,6 +16,7 @@ export default function AppLayout() {
 
     const [user, setUser] = useStore(state => [state.user, state.setUser])
     const setIsConnected = useStore(state => state.setIsConnected)
+    const [decks, setDecks] = useStore(state => [state.decks, state.setDecks])
 
     useEffect(() => {
         const unsubscribeAuth = auth.onAuthStateChanged((newUser) => {
@@ -29,6 +32,27 @@ export default function AppLayout() {
         const unsubscribeNetInfo = NetInfo.addEventListener(state => {
             setIsConnected(!!state.isConnected)
         })
+
+
+        const decksRef = ref(database, 'decks')
+        get(decksRef).then(async (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val()
+                const promises = data.map(async (deck: any) => {
+                    if (deck.type === 'image' && deck.cards[0].startsWith('gs://')) {
+                        deck.cards = await Promise.all(deck.cards.map(async (card: string) => await getStorageUrl(card)))
+                    }
+                    return deck
+                })
+
+                const newDecks = await Promise.all(promises)
+                setDecks(newDecks)
+            }
+        }).catch((error) => {
+            console.error("Error fetching decks:", error)
+        })
+
+
 
         return () => {
             unsubscribeAuth()
