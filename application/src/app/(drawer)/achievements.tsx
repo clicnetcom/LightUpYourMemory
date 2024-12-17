@@ -16,8 +16,7 @@ export default function Achievements() {
     useEffect(() => {
         if (!user) return
 
-        const userRef = ref(database, `users/${user.uid}`)
-        get(userRef).then((snapshot) => {
+        get(ref(database, `users/${user.uid}`)).then((snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val()
                 console.log('user data:', data)
