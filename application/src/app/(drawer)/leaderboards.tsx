@@ -1,43 +1,48 @@
 import { useTheme } from "@/useTheme"
 import { View, ScrollView } from "react-native"
 import { Text, Button } from "react-native-paper"
-import { useState } from "react"
-
-function WinsTab() {
-    return (
-        <ScrollView>
-            <Text variant="bodyLarge">Wins Leaderboard Content</Text>
-        </ScrollView>
-    )
-}
-
-function LossesTab() {
-    return (
-        <ScrollView>
-            <Text variant="bodyLarge">Losses Leaderboard Content</Text>
-        </ScrollView>
-    )
-}
-
-function TimeAttackTab() {
-    return (
-        <ScrollView>
-            <Text variant="bodyLarge">Time Attack Leaderboard Content</Text>
-        </ScrollView>
-    )
-}
+import { useEffect, useState } from "react"
+import { database } from "@/firebase"
+import { useStore } from "@/useStore"
+import { get, ref } from "firebase/database"
 
 export default function Leaderboards() {
     const theme = useTheme()
     const [activeTab, setActiveTab] = useState('wins')
 
-    const renderContent = () => {
-        switch (activeTab) {
-            case 'losses': return <LossesTab />
-            case 'timeAttack': return <TimeAttackTab />
-            default: return <WinsTab />
-        }
-    }
+    const [wins, setWins] = useState([])
+    const [losses, setLosses] = useState([])
+    const [timeAttack, setTimeAttack] = useState([])
+
+    useEffect(() => {
+        get(ref(database, 'users')).then(async (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val()
+                const users = Object.values(data)
+
+                const tempWins: any | null[] = []
+                const tempLosses: any | null[] = []
+                const tempTimeAttack: any | null[] = []
+
+                users.forEach((user: any) => {
+                    const { wins, losses, time } = user.stats
+                    tempWins.push({ name: user.name, value: wins })
+                    tempLosses.push({ name: user.name, value: losses })
+                    tempTimeAttack.push({ name: user.name, value: time })
+                })
+
+                setWins(tempWins.sort((a: any, b: any) => b.value - a.value))
+                setLosses(tempLosses.sort((a: any, b: any) => b.value - a.value))
+                setTimeAttack(tempTimeAttack.sort((a: any, b: any) => a.value - b.value))
+
+                console.log('data:', data)
+            }
+        }).catch((error) => {
+            console.error("Error fetching users:", error)
+        })
+
+    }, [])
+
 
     return (
         <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
@@ -61,10 +66,12 @@ export default function Leaderboards() {
                     onPress={() => setActiveTab('timeAttack')}
                     style={{ flex: 1, borderRadius: 0 }}
                 >
-                    Time
+                    Time Attack
                 </Button>
             </View>
-            {renderContent()}
+            <ScrollView>
+                <Text variant="bodyLarge">Wins Leaderboard Content</Text>
+            </ScrollView>
         </View>
     )
 }
