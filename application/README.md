@@ -15,8 +15,6 @@
 3. Multiplayer Mode (Turn Based)
 7. Include a simple in-game chat system for the multiplayer mode.
 
-8. DONE - Support at least two themes (e.g., Light Mode and Dark Mode) with the ability for the user to switch between them.
-    - rn-paper
 12. Admin UI to view Game Analytics
 
 # expo-template
