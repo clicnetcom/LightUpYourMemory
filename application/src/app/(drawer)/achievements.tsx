@@ -4,18 +4,53 @@ import { Text } from "react-native-paper"
 
 export default function Achievements() {
     const theme = useTheme()
-
-    // 1. First game played 🎮
-    // 2. First game won 🏆
-    // 3. First game lost 😢
-    // 4. First game tied 😐
-    // 5. 10 games played 🔟
-    // 6. 10 games won 🥇
-    // 7. 10 games lost 💔
-    // 8. 10 games tied 😐
-    // 9. 100 games played 💯
-    // 10 Perfect game 🌟
-    // 11. Under 10 seconds ⏱️
+    const achievements: Achievement[] = [
+        {
+            id: '0',
+            title: 'First game played',
+            icon: '🎮'
+        }, {
+            id: '1',
+            title: 'First game won',
+            icon: '🏆'
+        }, {
+            id: '2',
+            title: 'First game lost',
+            icon: '😢'
+        }, {
+            id: '3',
+            title: 'First game tied',
+            icon: '😐'
+        }, {
+            id: '4',
+            title: '10 games played',
+            icon: '🔟'
+        }, {
+            id: '5',
+            title: '10 games won',
+            icon: '🥇'
+        }, {
+            id: '6',
+            title: '10 games lost',
+            icon: '💔'
+        }, {
+            id: '7',
+            title: '10 games tied',
+            icon: '😐'
+        }, {
+            id: '8',
+            title: '100 games played',
+            icon: '💯'
+        }, {
+            id: '9',
+            title: 'Perfect game',
+            icon: '🌟'
+        }, {
+            id: '10',
+            title: 'Under 10 seconds',
+            icon: '⏱️'
+        }
+    ]
     return (
         <View
             style={{

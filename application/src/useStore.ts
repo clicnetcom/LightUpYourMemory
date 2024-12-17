@@ -16,8 +16,6 @@ interface State {
     setUser: (user: User | null) => void,
     isConnected: boolean,
     setIsConnected: (isConnected: boolean) => void,
-    achievements: Achievement[],
-    setAchievements: (achievements: Achievement[]) => void,
 }
 export const useStore = create<State>()(
     devtools(
@@ -35,8 +33,6 @@ export const useStore = create<State>()(
                 setUser: (user) => set({ user }),
                 isConnected: true,
                 setIsConnected: (isConnected) => set({ isConnected }),
-                achievements: [],
-                setAchievements: (achievements) => set({ achievements }),
             }),
             {
                 name: 'main-state',
