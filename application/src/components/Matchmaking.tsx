@@ -141,31 +141,39 @@ export default function Matchmaking() {
             )}
 
             {activeTab === 'create' && (
-                <View style={{ padding: 16, gap: 16 }}>
-                    <Text variant="titleMedium">Create New Match</Text>
+                <View style={{
+                    flex: 1,
+                    padding: 16,
+                    gap: 16,
+                    display: 'flex',
+                }}>
 
-                    <View
-                        style={{
-                            height: '30%',
-                        }}>
+                    <View style={{
+                        flex: 1,
+                        marginVertical: 8,
+                    }}>
                         <DeckSelection />
                     </View>
 
-                    <TextInput
-                        label="Password (optional)"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                    />
+                    <View style={{
+                        gap: 16,
+                    }}>
+                        <TextInput
+                            label="Password (optional)"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                        />
 
-                    <Button
-                        mode="contained"
-                        onPress={handleCreateMatch}
-                        loading={isCreating}
-                        disabled={isCreating || !user}
-                    >
-                        Create Match
-                    </Button>
+                        <Button
+                            mode="contained"
+                            onPress={handleCreateMatch}
+                            loading={isCreating}
+                            disabled={isCreating || !user}
+                        >
+                            Create Match
+                        </Button>
+                    </View>
                 </View>
             )}
         </View>
