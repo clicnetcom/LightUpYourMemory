@@ -10,7 +10,7 @@ import { Text, Portal, Modal, Button } from "react-native-paper"
 import CardView from "@/components/CardView"
 import EndScreen from "@/components/EndScreen"
 import { formatTime } from "@/utils"
-import { get, ref, set } from "firebase/database"
+import { get, ref, set, onValue } from "firebase/database"
 import { database } from "@/firebase"
 import Matchmaking from "@/components/Matchmaking"
 import Waiting from "@/components/Waiting"
@@ -65,7 +65,6 @@ export default function Game() {
         }
         if (!currentGame) {
             setCurrentGame({
-                id: new Date().getTime().toString(),
                 type: gameType
             })
         }
@@ -129,6 +128,27 @@ export default function Game() {
             finishGame(true)
         }
     }, [cards])
+
+    useEffect(() => {
+        console.log('---currentGame', currentGame)
+
+        if (!currentGame?.id) return
+
+        console.log('adding game listener', currentGame.id)
+        const gameRef = ref(database, `matches/${currentGame.id}`)
+        const unsubscribe = onValue(gameRef, (snapshot) => {
+            console.log('----snap')
+            if (snapshot.exists()) {
+                const gameData = snapshot.val()
+                console.log('game changed', gameData)
+                setCurrentGame(gameData)
+            }
+        })
+
+        return () => {
+            unsubscribe()
+        }
+    }, [currentGame?.id])
 
     const makeAIMove = useCallback(() => {
         const unmatchedCards = cards.reduce((acc, card, index) => {
@@ -248,7 +268,8 @@ export default function Game() {
         )
     }
     if (currentGame && gameType === 'multiplayer' && !currentGame?.opponent) {
-        if (currentGame.deck && !currentGame.opponent) {
+        console.log('opponent', currentGame.opponent)
+        if (currentGame.deck && !currentGame.opponent?.uid) {
             return <Waiting />
         }
         return <Matchmaking />
