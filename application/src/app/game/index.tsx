@@ -12,6 +12,7 @@ import EndScreen from "@/components/EndScreen"
 import { formatTime } from "@/utils"
 import { get, ref, set } from "firebase/database"
 import { database } from "@/firebase"
+import Matchmaking from "@/components/Matchmaking"
 
 const GAME_TITLES: Record<GameType, string> = {
     'single': 'Single Player',
@@ -244,6 +245,10 @@ export default function Game() {
                 </Text>
             </View>
         )
+    }
+
+    if (currentGame && gameType === 'multiplayer' && !currentGame?.opponent) {
+        return <Matchmaking />
     }
 
     if (currentGame && !currentGame?.deck) {

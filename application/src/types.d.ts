@@ -4,6 +4,7 @@ export declare global {
         id: string
         type: GameType
         deck?: string
+        opponent?: string
     }
     type DeckType = 'string' | 'image'
     type Deck = {
