@@ -1,5 +1,5 @@
 import { useTheme } from "@/useTheme"
-import { View, ScrollView, FlatList, useWindowDimensions, Image } from "react-native"
+import { View, FlatList, useWindowDimensions, Image } from "react-native"
 import { Text, Button } from "react-native-paper"
 import { useStore } from "@/useStore"
 
