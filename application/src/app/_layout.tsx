@@ -22,6 +22,7 @@ export default function AppLayout() {
         const unsubscribeAuth = auth.onAuthStateChanged((newUser) => {
             if (newUser) {
                 if (user?.uid !== newUser.uid) {
+                    setUser(newUser)
                     const userRef = ref(database, `users/${newUser.uid}`)
                     get(userRef).then((snapshot) => {
                         if (!snapshot.exists()) {
@@ -31,17 +32,19 @@ export default function AppLayout() {
                                 photo: newUser.photoURL,
                                 achievements: [],
                                 stats: {
+                                    plays: 0,
                                     wins: 0,
                                     losses: 0,
                                     time: 0,
-                                }
+                                    ties: 0,
+                                },
+                                logs: [],
                             })
                         }
                     }
                     ).catch((error) => {
                         console.error("Error fetching user data:", error)
                     })
-                    setUser(newUser)
                 }
             } else {
                 router.replace('/login')
