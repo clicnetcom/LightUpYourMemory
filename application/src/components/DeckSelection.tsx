@@ -3,7 +3,7 @@ import { View, FlatList, useWindowDimensions, Image } from "react-native"
 import { Text, Button } from "react-native-paper"
 import { useStore } from "@/useStore"
 
-export default function DeckSelection({ onSelect }: { onSelect: (deckId: string) => void }) {
+export default function DeckSelection({ onSelect }: { onSelect: (deck: Deck) => void }) {
     const theme = useTheme()
     const [currentGame, setCurrentGame] = useStore(state => [state.currentGame, state.setCurrentGame])
     const decks = useStore(state => state.decks)
@@ -84,7 +84,7 @@ export default function DeckSelection({ onSelect }: { onSelect: (deckId: string)
                             alignItems: 'center',
                             padding: 8,
                         }}
-                        onPress={() => onSelect(item.id)}
+                        onPress={() => onSelect(item)}
                     >
                         <View style={{ alignItems: 'center' }}>
                             <Text variant="titleMedium">{item.title}</Text>

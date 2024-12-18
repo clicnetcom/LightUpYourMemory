@@ -251,11 +251,11 @@ export default function Game() {
         return <Matchmaking />
     }
 
-    const selectDeck = (deckId: string) => {
+    const selectDeck = (deck: Deck) => {
         if (currentGame) {
             setCurrentGame({
                 ...currentGame,
-                deck: deckId
+                deck: deck.id
             })
         }
     }
