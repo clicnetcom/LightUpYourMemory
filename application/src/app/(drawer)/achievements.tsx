@@ -2,7 +2,7 @@ import { useTheme } from "@/useTheme"
 import { useEffect, useState } from "react"
 import { View, ScrollView } from "react-native"
 import { FlatList } from "react-native-gesture-handler"
-import { Text } from "react-native-paper"
+import { ActivityIndicator, Text } from "react-native-paper"
 import { database } from "@/firebase"
 import { ref, get } from "firebase/database"
 import { useStore } from "@/useStore"
@@ -12,7 +12,7 @@ export default function Achievements() {
     const user = useStore(state => state.user)
     const achievements = useStore(state => state.achievements)
     const [userAchievements, setUserAchievements] = useState<string[]>([])
-
+    const [isLoading, setIsLoading] = useState(true)
     const evaluateCondition = (condition: string, stats: any) => {
         const [stat, operator, value] = condition.split(/\s*(>=|<=|==|>|<)\s*/)
         const statValue = stats[stat] || 0
@@ -38,6 +38,7 @@ export default function Achievements() {
                 const unlockedAchievements = achievements
                     .filter(achievement => evaluateCondition(achievement.condition, stats))
                     .map(achievement => achievement.id)
+                setIsLoading(false)
                 setUserAchievements(unlockedAchievements)
             }
         }).catch((error) => {
@@ -82,7 +83,11 @@ export default function Achievements() {
                             <Text style={{ fontSize: 20, flex: 1 }}>
                                 {item.title}
                             </Text>
-                            {userAchievements.includes(item.id) && (
+
+                            {isLoading && (
+                                <ActivityIndicator size="small" color={theme.colors.primary} />
+                            )}
+                            {!isLoading && userAchievements.includes(item.id) && (
                                 <Text style={{ fontSize: 24, color: 'green' }}>
                                     ✓
                                 </Text>
