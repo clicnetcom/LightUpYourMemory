@@ -2,7 +2,7 @@ export declare global {
     type GameType = 'single' | 'time-attack' | 'single-ai' | 'multiplayer'
     type Player = {
         uid: string
-        name: string
+        name?: string
     }
     type Game = {
         id: string

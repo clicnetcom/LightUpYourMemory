@@ -26,6 +26,9 @@ export default function Leaderboards() {
                 const tempTimeAttack: any | null[] = []
 
                 users.forEach((user: any) => {
+                    if (!user.name) {
+                        return
+                    }
                     const { wins, losses, time } = user.stats
                     tempWins.push({ name: user.name, value: wins, photo: user.photo })
                     tempLosses.push({ name: user.name, value: losses, photo: user.photo })
