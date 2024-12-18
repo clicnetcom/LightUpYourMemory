@@ -4,7 +4,7 @@ import { View, ScrollView, Image } from "react-native"
 import { Text, Button, TextInput, SegmentedButtons } from "react-native-paper"
 import { useEffect, useState } from "react"
 import { database } from "@/firebase"
-import { get, ref, update, push } from "firebase/database"
+import { get, ref, update, push, onValue } from "firebase/database"
 import { FlatList } from "react-native-gesture-handler"
 import DeckSelection from "./DeckSelection"
 
@@ -21,7 +21,8 @@ export default function Matchmaking() {
     const [isCreating, setIsCreating] = useState(false)
 
     useEffect(() => {
-        get(ref(database, 'matches')).then(async (snapshot) => {
+        const matchesRef = ref(database, 'matches')
+        const unsubscribe = onValue(matchesRef, (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val()
                 const matchesArray = Object.entries(data).map(([id, match]: [string, any]) => ({
@@ -33,10 +34,16 @@ export default function Matchmaking() {
                     password: match.password
                 }))
                 setMatches(matchesArray)
+            } else {
+                setMatches([])
             }
-        }).catch((error) => {
-            console.error("Error fetching matches:", error)
+        }, (error) => {
+            console.error("Error watching matches:", error)
         })
+
+        return () => {
+            unsubscribe()
+        }
     }, [])
 
     const handleJoinMatch = (match: Match) => {
