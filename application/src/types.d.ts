@@ -1,10 +1,14 @@
 export declare global {
     type GameType = 'single' | 'time-attack' | 'single-ai' | 'multiplayer'
+    type Player = {
+        uid: string
+        name: string
+    }
     type Game = {
         id: string
         type: GameType
         deck?: string
-        opponent?: string
+        opponent?: Player
     }
     type DeckType = 'string' | 'image'
     type Deck = {
@@ -23,14 +27,8 @@ export declare global {
     type Match = {
         id: string
         createAt: number
-        p1: {
-            uid: string
-            name: string
-        }
-        p2?: {
-            uid: string
-            name: string
-        }
+        p1: Player
+        p2?: Player
         deck: string
         opponent?: string
         password?: string

@@ -4,7 +4,7 @@ import { View, ScrollView, Image } from "react-native"
 import { Text, Button } from "react-native-paper"
 import { useEffect, useState } from "react"
 import { database } from "@/firebase"
-import { get, ref } from "firebase/database"
+import { get, ref, update } from "firebase/database"
 import { FlatList } from "react-native-gesture-handler"
 
 export default function Matchmaking() {
@@ -12,6 +12,8 @@ export default function Matchmaking() {
     const user = useStore(state => state.user)
     const [activeTab, setActiveTab] = useState('join')
     const [matches, setMatches] = useState<Match[]>([])
+
+    const [currentGame, setCurrentGame] = useStore(state => [state.currentGame, state.setCurrentGame])
 
     useEffect(() => {
         get(ref(database, 'matches')).then(async (snapshot) => {
@@ -31,6 +33,30 @@ export default function Matchmaking() {
             console.error("Error fetching matches:", error)
         })
     }, [])
+
+    const handleJoinMatch = (match: Match) => {
+        if (!user) return
+
+        update(ref(database, `matches/${match.id}`), {
+            p2: {
+                id: user.uid,
+                name: user.displayName
+            }
+        }).then(() => {
+            console.log('Joined match successfully')
+            setCurrentGame({
+                id: match.id,
+                type: 'multiplayer',
+                deck: match.deck,
+                opponent: {
+                    uid: match.p1.uid,
+                    name: match.p1.name
+                } as Player
+            })
+        }).catch((error) => {
+            console.error("Error joining match:", error)
+        })
+    }
 
     return (
         <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
@@ -58,10 +84,23 @@ export default function Matchmaking() {
                         <View style={{
                             padding: 16,
                             borderBottomWidth: 1,
-                            borderBottomColor: theme.colors.outline
+                            borderBottomColor: theme.colors.outline,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
                         }}>
-                            <Text>Match #{item.id}</Text>
-                            <Text>Created by: {item.p1.name}</Text>
+                            <View>
+                                <Text>Match #{item.id}</Text>
+                                <Text>Created by: {item.p1.name}</Text>
+                            </View>
+                            {!item.p2 && (
+                                <Button
+                                    mode="contained"
+                                    onPress={() => handleJoinMatch(item)}
+                                >
+                                    Join
+                                </Button>
+                            )}
                         </View>
                     )}
                 />
