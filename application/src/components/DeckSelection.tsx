@@ -77,10 +77,6 @@ export default function DeckSelection() {
             padding: 50,
             flex: 1,
         }}>
-            <Text variant="headlineMedium" style={{ marginBottom: 16 }}>
-                Select a deck:
-            </Text>
-
             <FlatList
                 data={decks}
                 numColumns={2}
