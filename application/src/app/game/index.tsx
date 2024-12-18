@@ -293,7 +293,7 @@ export default function Game() {
                 </View>
             }
 
-            {gameType === 'single-ai' && <View style={{
+            {(gameType === 'single-ai' || gameType === 'multiplayer') && <View style={{
                 margin: 16,
                 flexDirection: 'row',
                 justifyContent: 'space-evenly',
@@ -335,7 +335,7 @@ export default function Game() {
                         style={{
                             color: !isPlayerTurn ? theme.colors.onPrimary : theme.colors.onBackground,
                         }}>
-                        {'Opponent'}
+                        {gameType === 'single-ai' ? 'AI Opponent' : currentGame?.opponent?.name}
                     </Text>
                 </View>
             </View>}
