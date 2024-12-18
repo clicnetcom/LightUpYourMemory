@@ -127,6 +127,9 @@ export default function Matchmaking() {
                                 <Text>Match #{item.id}</Text>
                                 <Text>Created by: {item.p1.name}</Text>
                             </View>
+                            {item.p2 && (
+                                <Text>Somebody is playing</Text>
+                            )}
                             {!item.p2 && (
                                 <Button
                                     mode="contained"
