@@ -25,6 +25,7 @@ export default function CustomDrawerContent(props: any) {
             console.error('Error signing out:', error)
         }
     }
+    const state = useStore()
 
     return (
         <View style={styles.drawerContent}>
@@ -42,6 +43,20 @@ export default function CustomDrawerContent(props: any) {
                 <Drawer.Section >
                     <DrawerItemList {...props} />
                 </Drawer.Section>
+
+                {/* {__DEV__ &&
+                    <Drawer.Section >
+                        <View style={[styles.preference]}>
+                            <Button
+                                mode="outlined"
+                                onPress={() => {
+                                    console.log('state', JSON.stringify(state))
+                                }}  >
+                                <Text variant="labelLarge">Print State</Text>
+                            </Button>
+                        </View>
+                    </Drawer.Section>
+                } */}
 
                 <TouchableRipple onPress={() => setIsAutoTheme(!isAutoTheme)}>
                     <View style={[styles.preference]}>
