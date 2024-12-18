@@ -99,10 +99,10 @@ export default function Game() {
                 if (data.stats) {
                     const newStats = {
                         plays: (data.stats.plays || 0) + 1,
-                        ties: (gameType === 'single-ai' || gameType === 'multiplayer') ? (data.stats.ties || 0) + (playerScore === opponentScore ? 1 : 0) : data.stats.ties,
-                        wins: win ? (data.stats.wins || 0) + 1 : data.stats.wins,
-                        losses: !win ? (data.stats.losses || 0) + 1 : data.stats.losses,
-                        time: gameType === 'time-attack' ? (data.stats.time || 0) == 0 ? timer : Math.min((data.stats.time || 0), timer) : data.stats.time,
+                        ties: (gameType === 'single-ai' || gameType === 'multiplayer') ? (data.stats.ties || 0) + (playerScore === opponentScore ? 1 : 0) : (data.stats.ties || 0),
+                        wins: win ? (data.stats.wins || 0) + 1 : (data.stats.wins || 0),
+                        losses: !win ? (data.stats.losses || 0) + 1 : (data.stats.losses || 0),
+                        time: gameType === 'time-attack' ? (data.stats.time || 0) == 0 ? timer : Math.min((data.stats.time || 0), timer) : (data.stats.time || 0),
                     }
                     set(ref(database, `users/${user?.uid}/stats`), newStats)
                 }
