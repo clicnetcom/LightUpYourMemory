@@ -13,6 +13,7 @@ import { formatTime } from "@/utils"
 import { get, ref, set } from "firebase/database"
 import { database } from "@/firebase"
 import Matchmaking from "@/components/Matchmaking"
+import Waiting from "@/components/Waiting"
 
 const GAME_TITLES: Record<GameType, string> = {
     'single': 'Single Player',
@@ -248,8 +249,13 @@ export default function Game() {
     }
 
     if (currentGame && gameType === 'multiplayer' && !currentGame?.opponent) {
+        if (currentGame.isWaiting) {
+            return <Waiting />
+        }
         return <Matchmaking />
     }
+
+
 
     const selectDeck = (deck: Deck) => {
         if (currentGame) {

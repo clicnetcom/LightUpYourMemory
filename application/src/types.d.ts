@@ -9,6 +9,7 @@ export declare global {
         type: GameType
         deck?: string
         opponent?: Player
+        isWaiting?: boolean
     }
     type DeckType = 'string' | 'image'
     type Deck = {
