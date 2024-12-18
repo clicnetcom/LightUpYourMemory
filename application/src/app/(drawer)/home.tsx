@@ -1,4 +1,4 @@
-import { FlatList, View, useWindowDimensions } from "react-native"
+import { FlatList, View, useWindowDimensions, ScrollView } from "react-native"
 import { useStore } from '@/useStore'
 import CustomButton from "@/components/CustomButton"
 import { Drawer } from 'expo-router/drawer'
@@ -35,8 +35,8 @@ export default function HomePage() {
                 }}
             />
 
-            <View style={{
-                flex: 1,
+            <ScrollView contentContainerStyle={{
+                flexGrow: 1,
                 alignItems: 'center',
                 justifyContent: 'center'
             }}>
@@ -72,7 +72,7 @@ export default function HomePage() {
                         )}
                     />
                 </View>
-            </View>
+            </ScrollView>
         </View>
     )
 }
