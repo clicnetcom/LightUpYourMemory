@@ -247,9 +247,8 @@ export default function Game() {
             </View>
         )
     }
-
     if (currentGame && gameType === 'multiplayer' && !currentGame?.opponent) {
-        if (currentGame.isWaiting) {
+        if (currentGame.deck && !currentGame.opponent) {
             return <Waiting />
         }
         return <Matchmaking />

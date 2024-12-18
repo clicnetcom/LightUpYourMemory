@@ -86,8 +86,7 @@ export default function Matchmaking() {
             setCurrentGame({
                 id: newMatchRef.key!,
                 type: 'multiplayer',
-                isWaiting: true,
-
+                deck: deck.id,
             })
 
             setPassword('')
