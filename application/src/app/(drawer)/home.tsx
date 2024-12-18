@@ -4,6 +4,7 @@ import CustomButton from "@/components/CustomButton"
 import { Drawer } from 'expo-router/drawer'
 import { DrawerToggleButton } from "@react-navigation/drawer"
 import { useTheme } from "@/useTheme"
+import Logo from "@/components/Logo"
 
 export default function HomePage() {
     const theme = useTheme()
@@ -38,8 +39,10 @@ export default function HomePage() {
             <ScrollView contentContainerStyle={{
                 flexGrow: 1,
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                paddingVertical: 32
             }}>
+                <Logo />
                 <View style={{ width: CONTAINER_WIDTH }}>
                     <FlatList
                         data={[
