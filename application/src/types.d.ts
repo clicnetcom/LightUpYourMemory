@@ -5,7 +5,7 @@ export declare global {
         name?: string
     }
     type Game = {
-        id: string
+        id?: string
         type: GameType
         deck?: string
         opponent?: Player
