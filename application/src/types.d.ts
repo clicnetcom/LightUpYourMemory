@@ -20,5 +20,14 @@ export declare global {
         icon: string
         condition: string
     }
+    type Match = {
+        id: string
+        createAt: number
+        p1: string
+        p2?: string
+        deck: string
+        opponent?: string
+        password?: string
+    }
 
 }
