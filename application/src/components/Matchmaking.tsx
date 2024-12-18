@@ -144,7 +144,10 @@ export default function Matchmaking() {
                 <View style={{ padding: 16, gap: 16 }}>
                     <Text variant="titleMedium">Create New Match</Text>
 
-                    <View>
+                    <View
+                        style={{
+                            height: '30%',
+                        }}>
                         <DeckSelection />
                     </View>
 
