@@ -1,9 +1,9 @@
 import { View, Text, ActivityIndicator } from 'react-native'
 import { useTheme } from '@/useTheme'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import CustomButton from '@/components/CustomButton'
 import { auth } from '@/firebase'
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { GoogleAuthProvider, signInWithPopup, signInAnonymously } from 'firebase/auth'
 import { router } from 'expo-router'
 
 export default function SignupPage() {
@@ -18,6 +18,19 @@ export default function SignupPage() {
             const provider = new GoogleAuthProvider()
             provider.setCustomParameters({ prompt: 'select_account' })
             await signInWithPopup(auth, provider)
+            router.replace('/(drawer)/home')
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'An error occurred')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleAnonymousSignIn = async () => {
+        setLoading(true)
+        setError(null)
+        try {
+            await signInAnonymously(auth)
             router.replace('/(drawer)/home')
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred')
@@ -45,11 +58,18 @@ export default function SignupPage() {
             {loading ? (
                 <ActivityIndicator size="large" color={theme.colors.primary} />
             ) : (
-                <CustomButton
-                    buttonStyle={{ width: 300 }}
-                    label="Sign in with Google"
-                    onPress={handleGoogleSignIn}
-                />
+                <Fragment>
+                    <CustomButton
+                        buttonStyle={{ width: 300, marginBottom: 10 }}
+                        label="Sign in with Google"
+                        onPress={handleGoogleSignIn}
+                    />
+                    <CustomButton
+                        buttonStyle={{ width: 300 }}
+                        label="Continue as Guest"
+                        onPress={handleAnonymousSignIn}
+                    />
+                </Fragment>
             )}
 
             {error && (
