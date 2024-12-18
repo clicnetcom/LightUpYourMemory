@@ -15,7 +15,7 @@ export default function Matchmaking() {
     const [matches, setMatches] = useState<Match[]>([])
 
     const [setCurrentGame] = useStore(state => [state.setCurrentGame])
-    const [decks] = useStore(state => [state.decks])
+    const [deck, setDeck] = useState(null as Deck | null)
 
     const [password, setPassword] = useState('')
     const [isCreating, setIsCreating] = useState(false)
@@ -63,6 +63,9 @@ export default function Matchmaking() {
         })
     }
 
+    const onDeckSelect = (deck: Deck) => {
+        setDeck(deck)
+    }
     const handleCreateMatch = async () => {
         if (!user) return
         setIsCreating(true)
@@ -155,7 +158,7 @@ export default function Matchmaking() {
                         flex: 1,
                         marginVertical: 8,
                     }}>
-                        <DeckSelection />
+                        <DeckSelection onSelect={onDeckSelect} />
                     </View>
 
                     <View style={{
@@ -172,7 +175,7 @@ export default function Matchmaking() {
                             mode="contained"
                             onPress={handleCreateMatch}
                             loading={isCreating}
-                            disabled={isCreating || !user}
+                            disabled={isCreating || !user || !deck}
                         >
                             Create Match
                         </Button>
