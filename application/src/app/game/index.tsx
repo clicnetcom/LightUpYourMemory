@@ -37,7 +37,7 @@ export default function Game() {
 
     const user = useStore(state => state.user)
     const [currentGame, setCurrentGame] = useStore(state => [
-        state.currentGame, state.setCurrentGame])
+        state.currentMatch, state.setCurrentMatch])
     const deck = useStore(state => state.decks.find(deck => deck.id === currentGame?.deck))
 
     const [cards, setCards] = useState<CardState[]>([])
@@ -65,6 +65,7 @@ export default function Game() {
         }
         if (!currentGame) {
             setCurrentGame({
+                id: Date.now().toString(),
                 type: gameType
             })
         }

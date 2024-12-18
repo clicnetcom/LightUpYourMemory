@@ -6,7 +6,7 @@ import { useState } from "react"
 
 export default function DeckSelection({ onSelect }: { onSelect: (deck: Deck) => void }) {
     const theme = useTheme()
-    const [currentGame, setCurrentGame] = useStore(state => [state.currentGame, state.setCurrentGame])
+    const [currentGame, setCurrentGame] = useStore(state => [state.currentMatch, state.setCurrentMatch])
     const decks = useStore(state => state.decks)
     const { width } = useWindowDimensions()
     const PREVIEW_SIZE = 70

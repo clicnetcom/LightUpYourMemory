@@ -14,7 +14,7 @@ export default function Matchmaking() {
     const [activeTab, setActiveTab] = useState('join')
     const [matches, setMatches] = useState<Match[]>([])
 
-    const [setCurrentGame] = useStore(state => [state.setCurrentGame])
+    const [setCurrentGame] = useStore(state => [state.setCurrentMatch])
     const [deck, setDeck] = useState(null as Deck | null)
 
     const [password, setPassword] = useState('')
@@ -29,7 +29,6 @@ export default function Matchmaking() {
                     id,
                     p1: match.p1,
                     p2: match.p2,
-                    createAt: match.createAt || Date.now(),
                     deck: match.deck,
                     password: match.password
                 }))

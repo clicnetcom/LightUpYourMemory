@@ -4,12 +4,6 @@ export declare global {
         uid: string
         name?: string
     }
-    type Game = {
-        id?: string
-        type: GameType
-        deck?: string
-        opponent?: Player
-    }
     type DeckType = 'string' | 'image'
     type Deck = {
         id: string
@@ -26,11 +20,10 @@ export declare global {
     }
     type Match = {
         id: string
-        createAt: number
+        type: GameType
         p1: Player
         p2?: Player
         deck: string
-        opponent?: string
         password?: string
     }
 
