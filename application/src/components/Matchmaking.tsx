@@ -1,11 +1,12 @@
 import { useTheme } from "@/useTheme"
 import { useStore } from "@/useStore"
 import { View, ScrollView, Image } from "react-native"
-import { Text, Button } from "react-native-paper"
+import { Text, Button, TextInput, SegmentedButtons } from "react-native-paper"
 import { useEffect, useState } from "react"
 import { database } from "@/firebase"
-import { get, ref, update } from "firebase/database"
+import { get, ref, update, push } from "firebase/database"
 import { FlatList } from "react-native-gesture-handler"
+import DeckSelection from "./DeckSelection"
 
 export default function Matchmaking() {
     const theme = useTheme()
@@ -13,7 +14,11 @@ export default function Matchmaking() {
     const [activeTab, setActiveTab] = useState('join')
     const [matches, setMatches] = useState<Match[]>([])
 
-    const [currentGame, setCurrentGame] = useStore(state => [state.currentGame, state.setCurrentGame])
+    const [setCurrentGame] = useStore(state => [state.setCurrentGame])
+    const [decks] = useStore(state => [state.decks])
+
+    const [password, setPassword] = useState('')
+    const [isCreating, setIsCreating] = useState(false)
 
     useEffect(() => {
         get(ref(database, 'matches')).then(async (snapshot) => {
@@ -56,6 +61,35 @@ export default function Matchmaking() {
         }).catch((error) => {
             console.error("Error joining match:", error)
         })
+    }
+
+    const handleCreateMatch = async () => {
+        if (!user) return
+        setIsCreating(true)
+
+        try {
+            const newMatchRef = push(ref(database, 'matches'))
+            await update(newMatchRef, {
+                p1: {
+                    id: user.uid,
+                    name: user.displayName
+                },
+                password: password || null,
+                createAt: Date.now()
+            })
+
+            setCurrentGame({
+                id: newMatchRef.key!,
+                type: 'multiplayer',
+
+            })
+
+            setPassword('')
+        } catch (error) {
+            console.error("Error creating match:", error)
+        } finally {
+            setIsCreating(false)
+        }
     }
 
     return (
@@ -107,8 +141,28 @@ export default function Matchmaking() {
             )}
 
             {activeTab === 'create' && (
-                <View style={{ padding: 16 }}>
-                    <Text>Create Match Form</Text>
+                <View style={{ padding: 16, gap: 16 }}>
+                    <Text variant="titleMedium">Create New Match</Text>
+
+                    <View>
+                        <DeckSelection />
+                    </View>
+
+                    <TextInput
+                        label="Password (optional)"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                    />
+
+                    <Button
+                        mode="contained"
+                        onPress={handleCreateMatch}
+                        loading={isCreating}
+                        disabled={isCreating || !user}
+                    >
+                        Create Match
+                    </Button>
                 </View>
             )}
         </View>
