@@ -13,20 +13,37 @@ export default function Achievements() {
     const achievements = useStore(state => state.achievements)
     const [userAchievements, setUserAchievements] = useState<string[]>([])
 
+    const evaluateCondition = (condition: string, stats: any) => {
+        const [stat, operator, value] = condition.split(/\s*(>=|<=|==|>|<)\s*/)
+        const statValue = stats[stat] || 0
+        const compareValue = Number(value)
+
+        switch (operator) {
+            case '>=': return statValue >= compareValue
+            case '<=': return statValue <= compareValue
+            case '==': return statValue == compareValue
+            case '>': return statValue > compareValue
+            case '<': return statValue < compareValue
+            default: return false
+        }
+    }
+
     useEffect(() => {
         if (!user) return
 
         get(ref(database, `users/${user.uid}`)).then((snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val()
-                if (data.achievements) {
-                    setUserAchievements(data.achievements)
-                }
+                const stats = data.stats || {}
+                const unlockedAchievements = achievements
+                    .filter(achievement => evaluateCondition(achievement.condition, stats))
+                    .map(achievement => achievement.id)
+                setUserAchievements(unlockedAchievements)
             }
         }).catch((error) => {
             console.error("Error fetching user data:", error)
         })
-    }, [])
+    }, [user, achievements])
 
     return (
         <View

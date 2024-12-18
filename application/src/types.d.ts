@@ -17,6 +17,7 @@ export declare global {
         id: string
         title: string
         icon: string
+        condition: string
     }
 
 }
