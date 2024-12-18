@@ -3,7 +3,7 @@ import { View, FlatList, useWindowDimensions, Image } from "react-native"
 import { Text, Button } from "react-native-paper"
 import { useStore } from "@/useStore"
 
-export default function DeckSelection() {
+export default function DeckSelection({ onSelect }: { onSelect: (deckId: string) => void }) {
     const theme = useTheme()
     const [currentGame, setCurrentGame] = useStore(state => [state.currentGame, state.setCurrentGame])
     const decks = useStore(state => state.decks)
@@ -11,14 +11,6 @@ export default function DeckSelection() {
     const PREVIEW_SIZE = 70
     const CARD_MARGIN = 3
 
-    const selectDeck = (deckId: string) => {
-        if (currentGame) {
-            setCurrentGame({
-                ...currentGame,
-                deck: deckId
-            })
-        }
-    }
 
     const renderPreview = (deck: Deck) => (
         <View style={{
@@ -92,7 +84,7 @@ export default function DeckSelection() {
                             alignItems: 'center',
                             padding: 8,
                         }}
-                        onPress={() => selectDeck(item.id)}
+                        onPress={() => onSelect(item.id)}
                     >
                         <View style={{ alignItems: 'center' }}>
                             <Text variant="titleMedium">{item.title}</Text>
