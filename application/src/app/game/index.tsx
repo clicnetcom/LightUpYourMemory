@@ -268,9 +268,10 @@ export default function Game() {
             </View>
         )
     }
-    if (currentMatch && gameType === 'multiplayer' && !currentMatch?.opponent) {
-        console.log('opponent', currentMatch.opponent)
-        if (currentMatch.deck && !currentMatch.opponent?.uid) {
+    if (currentMatch && gameType === 'multiplayer' && !currentMatch.p2?.uid) {
+        console.log('opponent', currentMatch.p2)
+        console.log('deck', currentMatch.deck)
+        if (currentMatch.deck && !currentMatch.p2?.uid) {
             return <Waiting />
         }
         return <Matchmaking />

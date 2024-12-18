@@ -14,7 +14,7 @@ export default function Matchmaking() {
     const [activeTab, setActiveTab] = useState('join')
     const [matches, setMatches] = useState<Match[]>([])
 
-    const [setCurrentGame] = useStore(state => [state.setCurrentMatch])
+    const [currentMatch, setCurrentMatch] = useStore(state => [state.currentMatch, state.setCurrentMatch])
     const [deck, setDeck] = useState(null as Deck | null)
 
     const [password, setPassword] = useState('')
@@ -27,6 +27,7 @@ export default function Matchmaking() {
                 const data = snapshot.val()
                 const matchesArray = Object.entries(data).map(([id, match]: [string, any]) => ({
                     id,
+                    type: 'multiplayer' as GameType,
                     p1: match.p1,
                     p2: match.p2,
                     deck: match.deck,
@@ -51,19 +52,16 @@ export default function Matchmaking() {
         console.log('joining match', match)
         update(ref(database, `matches/${match.id}`), {
             p2: {
-                id: user.uid,
+                uid: user.uid,
                 name: user.displayName
             }
         }).then(() => {
             console.log('Joined match successfully')
-            setCurrentGame({
+            setCurrentMatch({
                 id: match.id,
                 type: 'multiplayer',
                 deck: match.deck,
-                opponent: {
-                    uid: match.p1.uid,
-                    name: match.p1.name
-                } as Player
+                p1: match.p1,
             })
         }).catch((error) => {
             console.error("Error joining match:", error)
@@ -74,26 +72,14 @@ export default function Matchmaking() {
         setDeck(deck)
     }
     const handleCreateMatch = async () => {
-        if (!user || !deck) return
+        if (!user || !deck || !currentMatch) return
         setIsCreating(true)
 
         try {
-            const newMatchRef = push(ref(database, 'matches'))
-            await update(newMatchRef, {
-                p1: {
-                    id: user.uid,
-                    name: user.displayName,
-                },
-                deck: deck.id,
-                password: password || null,
-                createAt: Date.now()
-            })
 
-            setCurrentGame({
-                id: newMatchRef.key!,
-                type: 'multiplayer',
-                deck: deck.id,
-            })
+            const updatedMatch = { ...currentMatch, deck: deck.id, password }
+            const newMatchRef = ref(database, `matches/${updatedMatch.id}`)
+            await update(newMatchRef, updatedMatch)
 
             setPassword('')
         } catch (error) {
