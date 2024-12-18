@@ -51,40 +51,52 @@ export default function Game() {
     const [opponentScore, setOpponentScore] = useState(0)
 
     useEffect(() => {
-
-
-        // setCurrentMatch({
-        //     id: Date.now().toString(),
-        //     type: gameType
-        // })
-
-
-
-
-
-        return () => {
-            setCurrentMatch(null)
+        if (!user) {
+            setTimeout(() => {
+                router.replace('/home')
+            }, 100)
+            return
         }
-    }, [])
-
-    useEffect(() => {
+        const newMatch = {
+            id: Date.now().toString(),
+            type: gameType,
+            p1: {
+                uid: user?.uid || '',
+                name: user?.displayName || 'Anon'
+            },
+        }
+        console.log('adding game listener to', newMatch.id)
         if (!Object.keys(GAME_TITLES).includes(gameType)) {
             setTimeout(() => {
                 router.replace('/home')
             }, 2000)
             return
         }
-        if (!currentMatch) {
-
-        }
-
         navigation.setOptions({
             header: () => <CustomHeader
                 items={[]}
                 title={GAME_TITLES[gameType]}
             />
         })
-    }, [navigation, gameType, mistakes])
+        setCurrentMatch(newMatch)
+
+
+        const gameRef = ref(database, `matches/${newMatch.id}`)
+        const unsubscribe = onValue(gameRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const gameData = snapshot.val()
+                console.log('game changed', gameData)
+                setCurrentMatch(gameData)
+            }
+        })
+
+        return () => {
+            console.log('Removing game', currentMatch)
+            setCurrentMatch(null)
+            unsubscribe()
+        }
+
+    }, [navigation, gameType])
 
     useEffect(() => {
         if (deck) {
@@ -138,26 +150,6 @@ export default function Game() {
         }
     }, [cards])
 
-    useEffect(() => {
-        console.log('---currentGame', currentMatch)
-
-        if (!currentMatch?.id) return
-
-        console.log('adding game listener', currentMatch.id)
-        const gameRef = ref(database, `matches/${currentMatch.id}`)
-        const unsubscribe = onValue(gameRef, (snapshot) => {
-            console.log('----snap')
-            if (snapshot.exists()) {
-                const gameData = snapshot.val()
-                console.log('game changed', gameData)
-                setCurrentMatch(gameData)
-            }
-        })
-
-        return () => {
-            unsubscribe()
-        }
-    }, [currentMatch?.id])
 
     const makeAIMove = useCallback(() => {
         const unmatchedCards = cards.reduce((acc, card, index) => {

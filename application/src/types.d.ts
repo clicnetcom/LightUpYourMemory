@@ -23,7 +23,7 @@ export declare global {
         type: GameType
         p1: Player
         p2?: Player
-        deck: string
+        deck?: string
         password?: string
     }
 
