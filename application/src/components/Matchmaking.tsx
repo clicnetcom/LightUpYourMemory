@@ -42,6 +42,7 @@ export default function Matchmaking() {
     const handleJoinMatch = (match: Match) => {
         if (!user) return
 
+        console.log('joining match', match)
         update(ref(database, `matches/${match.id}`), {
             p2: {
                 id: user.uid,
@@ -75,8 +76,9 @@ export default function Matchmaking() {
             await update(newMatchRef, {
                 p1: {
                     id: user.uid,
-                    name: user.displayName
+                    name: user.displayName,
                 },
+                deck: deck,
                 password: password || null,
                 createAt: Date.now()
             })
