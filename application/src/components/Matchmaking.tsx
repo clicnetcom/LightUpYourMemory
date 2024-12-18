@@ -68,7 +68,7 @@ export default function Matchmaking() {
         setDeck(deck)
     }
     const handleCreateMatch = async () => {
-        if (!user) return
+        if (!user || !deck) return
         setIsCreating(true)
 
         try {
