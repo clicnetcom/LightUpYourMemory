@@ -36,9 +36,9 @@ export default function Game() {
     const gameType = local?.type as GameType
 
     const user = useStore(state => state.user)
-    const [currentGame, setCurrentGame] = useStore(state => [
+    const [currentMatch, setCurrentMatch] = useStore(state => [
         state.currentMatch, state.setCurrentMatch])
-    const deck = useStore(state => state.decks.find(deck => deck.id === currentGame?.deck))
+    const deck = useStore(state => state.decks.find(deck => deck.id === currentMatch?.deck))
 
     const [cards, setCards] = useState<CardState[]>([])
     const [flippedCards, setFlippedCards] = useState<number[]>([])
@@ -51,8 +51,19 @@ export default function Game() {
     const [opponentScore, setOpponentScore] = useState(0)
 
     useEffect(() => {
+
+
+        // setCurrentMatch({
+        //     id: Date.now().toString(),
+        //     type: gameType
+        // })
+
+
+
+
+
         return () => {
-            setCurrentGame(null)
+            setCurrentMatch(null)
         }
     }, [])
 
@@ -63,11 +74,8 @@ export default function Game() {
             }, 2000)
             return
         }
-        if (!currentGame) {
-            setCurrentGame({
-                id: Date.now().toString(),
-                type: gameType
-            })
+        if (!currentMatch) {
+
         }
 
         navigation.setOptions({
@@ -131,25 +139,25 @@ export default function Game() {
     }, [cards])
 
     useEffect(() => {
-        console.log('---currentGame', currentGame)
+        console.log('---currentGame', currentMatch)
 
-        if (!currentGame?.id) return
+        if (!currentMatch?.id) return
 
-        console.log('adding game listener', currentGame.id)
-        const gameRef = ref(database, `matches/${currentGame.id}`)
+        console.log('adding game listener', currentMatch.id)
+        const gameRef = ref(database, `matches/${currentMatch.id}`)
         const unsubscribe = onValue(gameRef, (snapshot) => {
             console.log('----snap')
             if (snapshot.exists()) {
                 const gameData = snapshot.val()
                 console.log('game changed', gameData)
-                setCurrentGame(gameData)
+                setCurrentMatch(gameData)
             }
         })
 
         return () => {
             unsubscribe()
         }
-    }, [currentGame?.id])
+    }, [currentMatch?.id])
 
     const makeAIMove = useCallback(() => {
         const unmatchedCards = cards.reduce((acc, card, index) => {
@@ -268,9 +276,9 @@ export default function Game() {
             </View>
         )
     }
-    if (currentGame && gameType === 'multiplayer' && !currentGame?.opponent) {
-        console.log('opponent', currentGame.opponent)
-        if (currentGame.deck && !currentGame.opponent?.uid) {
+    if (currentMatch && gameType === 'multiplayer' && !currentMatch?.opponent) {
+        console.log('opponent', currentMatch.opponent)
+        if (currentMatch.deck && !currentMatch.opponent?.uid) {
             return <Waiting />
         }
         return <Matchmaking />
@@ -279,14 +287,14 @@ export default function Game() {
 
 
     const selectDeck = (deck: Deck) => {
-        if (currentGame) {
-            setCurrentGame({
-                ...currentGame,
+        if (currentMatch) {
+            setCurrentMatch({
+                ...currentMatch,
                 deck: deck.id
             })
         }
     }
-    if (currentGame && !currentGame?.deck) {
+    if (currentMatch && !currentMatch?.deck) {
         return <DeckSelection onSelect={selectDeck} />
     }
 
@@ -370,7 +378,7 @@ export default function Game() {
                         style={{
                             color: !isPlayerTurn ? theme.colors.onPrimary : theme.colors.onBackground,
                         }}>
-                        {gameType === 'single-ai' ? 'AI Opponent' : currentGame?.opponent?.name}
+                        {gameType === 'single-ai' ? 'AI Opponent' : currentMatch?.opponent?.name}
                     </Text>
                 </View>
             </View>}
