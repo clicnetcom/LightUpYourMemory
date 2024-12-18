@@ -78,7 +78,7 @@ export default function Matchmaking() {
                     id: user.uid,
                     name: user.displayName,
                 },
-                deck: deck,
+                deck: deck.id,
                 password: password || null,
                 createAt: Date.now()
             })
