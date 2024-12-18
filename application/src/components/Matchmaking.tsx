@@ -20,6 +20,7 @@ export default function Matchmaking() {
                 const matchesArray = Object.entries(data).map(([id, match]: [string, any]) => ({
                     id,
                     p1: match.p1,
+                    p2: match.p2,
                     createAt: match.createAt || Date.now(),
                     deck: match.deck,
                     password: match.password
@@ -60,7 +61,7 @@ export default function Matchmaking() {
                             borderBottomColor: theme.colors.outline
                         }}>
                             <Text>Match #{item.id}</Text>
-                            <Text>Created by: {item.p1}</Text>
+                            <Text>Created by: {item.p1.name}</Text>
                         </View>
                     )}
                 />

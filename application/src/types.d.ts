@@ -23,8 +23,14 @@ export declare global {
     type Match = {
         id: string
         createAt: number
-        p1: string
-        p2?: string
+        p1: {
+            uid: string
+            name: string
+        }
+        p2?: {
+            uid: string
+            name: string
+        }
         deck: string
         opponent?: string
         password?: string
