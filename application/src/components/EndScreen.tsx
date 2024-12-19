@@ -55,6 +55,13 @@ export default function EndScreen({
                 padding: 20,
                 margin: 20,
                 borderRadius: 8,
+                width: 500,
+                maxWidth: '90%',
+                alignSelf: 'center',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: [{ translateX: -250 }, { translateY: -150 }]
             }}
         >
             <Text variant="headlineMedium" style={{ marginBottom: 16 }}>
