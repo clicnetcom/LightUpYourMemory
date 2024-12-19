@@ -4,6 +4,7 @@ import { Text, Button } from "react-native-paper"
 import { useStore } from "@/useStore"
 import { useState } from "react"
 import DeckPreview from "./DeckPreview"
+import DeckCreation from "./DeckCreation"
 
 export default function DeckSelection({ onSelect }: { onSelect: (deck: Deck) => void }) {
     const theme = useTheme()
@@ -21,7 +22,9 @@ export default function DeckSelection({ onSelect }: { onSelect: (deck: Deck) => 
             flex: 1,
         }}>
 
-            {deckCreation && "deck creation"}
+            {deckCreation && <DeckCreation
+                goBack={() => setDeckCreation(false)}
+                onSelect={(deck) => onSelect(deck)} />}
 
             {!deckCreation && <FlatList
                 data={decks}
@@ -52,7 +55,7 @@ export default function DeckSelection({ onSelect }: { onSelect: (deck: Deck) => 
                     </Button>
                 )}
                 ListFooterComponent={<Button
-                    key="create new"
+                    key="create-new-deck"
                     style={{
                         marginVertical: 8,
                         width: (width - 100) / 2,
@@ -71,7 +74,7 @@ export default function DeckSelection({ onSelect }: { onSelect: (deck: Deck) => 
                             title: '',
                             description: '',
                             type: 'string',
-                            cards: ['❓', '❔', '❓', '❔']
+                            cards: ['❓', '❔', '❔', '❓']
                         }} />
                     </View>
                 </Button>}
