@@ -25,6 +25,13 @@ export declare global {
         p2?: Player
         deck?: string
         password?: string
+        turn?: string
+        board?: {
+            id: number,
+            value: string,
+            isFlipped: boolean
+        }[],
+        chat?: string[]
     }
 
 }

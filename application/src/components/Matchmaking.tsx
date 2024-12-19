@@ -76,8 +76,22 @@ export default function Matchmaking() {
         setIsCreating(true)
 
         try {
-
-            const updatedMatch = { ...currentMatch, deck: deck.id, password }
+            const updatedMatch: Match = {
+                ...currentMatch,
+                deck: deck.id,
+                password,
+                turn: 'p1',
+                board: deck.cards.map((card, index) => {
+                    return {
+                        id: index,
+                        value: card,
+                        isFlipped: false
+                    }
+                }).sort(() => Math.random() - 0.5),
+                chat: [
+                    `${user.displayName} created the match!`
+                ]
+            }
             const newMatchRef = ref(database, `matches/${updatedMatch.id}`)
             await update(newMatchRef, updatedMatch)
 
