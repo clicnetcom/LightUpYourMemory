@@ -1,7 +1,7 @@
 import { useTheme } from "@/useTheme"
 import { Stack } from "expo-router"
 
-export default function ExerciseLayout() {
+export default function GameLayout() {
     const theme = useTheme()
 
     return (<Stack
