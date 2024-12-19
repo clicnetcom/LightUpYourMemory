@@ -52,6 +52,7 @@ export default function Game() {
     const [opponentScore, setOpponentScore] = useState(0)
 
     useEffect(() => {
+        console.log('game --', currentMatch)
         if (!user) {
             setTimeout(() => {
                 router.replace('/home')

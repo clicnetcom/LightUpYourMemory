@@ -64,10 +64,6 @@ export default function Matchmaking() {
                 deck: match.deck,
                 p1: match.p1,
             })
-
-            setTimeout(() => {
-                router.push('/player2')
-            }, 100)
         }).catch((error) => {
             console.error("Error joining match:", error)
         })
