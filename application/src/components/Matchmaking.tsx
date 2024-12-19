@@ -86,19 +86,21 @@ export default function Matchmaking() {
         setIsCreating(true)
 
         try {
+            const shuffledPairs = [...deck.cards, ...deck.cards]
+                .sort(() => Math.random() - 0.5)
+                .map((card, index) => ({
+                    id: index,
+                    value: card,
+                    isFlipped: false,
+                    isMatched: false
+                }))
+
             const updatedMatch: Match = {
                 ...currentMatch,
                 deck: deck.id,
                 password,
                 turn: 'p1',
-                board: deck.cards.map((card, index) => {
-                    return {
-                        id: index,
-                        value: card,
-                        isFlipped: false,
-                        isMatched: false
-                    }
-                }).sort(() => Math.random() - 0.5),
+                board: shuffledPairs,
                 chat: [
                     `${user.displayName} created the match!`
                 ]

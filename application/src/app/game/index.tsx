@@ -43,7 +43,7 @@ export default function Game() {
     const [isPlayerTurn, setIsPlayerTurn] = useState(true)
     const [playerScore, setPlayerScore] = useState(0)
     const [opponentScore, setOpponentScore] = useState(0)
-
+    const [currentTurn, setCurrentTurn] = useState<'p1' | 'p2'>('p1')
 
     const [isMaster, setIsMaster] = useState(true)
 
@@ -66,6 +66,14 @@ export default function Game() {
 
     }, [currentMatch])
 
+    useEffect(() => {
+        if (gameType === 'multiplayer' && currentMatch) {
+            setCurrentTurn(currentMatch.turn || 'p1')
+            const isMyTurn = (currentMatch.turn === 'p1' && currentMatch.p1.uid === user?.uid) ||
+                (currentMatch.turn === 'p2' && currentMatch.p2?.uid === user?.uid)
+            setIsPlayerTurn(isMyTurn)
+        }
+    }, [currentMatch])
 
     useEffect(() => {
         console.log('Starting game', currentMatch)
@@ -78,11 +86,13 @@ export default function Game() {
         const newMatch = {
             id: Date.now().toString(),
             type: gameType,
+            turn: 'p1', // Add initial turn
             p1: {
                 uid: user?.uid || '',
                 name: user?.displayName || 'Anon'
             },
         }
+
         console.log('adding game listener to', newMatch.id)
         if (!Object.keys(GAME_TITLES).includes(gameType)) {
             setTimeout(() => {
@@ -213,7 +223,7 @@ export default function Game() {
                         setIsPlayerTurn(true)
                     }, 1000)
                 }
-            }, 500)
+            }, 2000)
         }
     }, [cards])
 
@@ -222,13 +232,24 @@ export default function Game() {
         console.log('setting flipped cards', flippedCards)
     }, [flippedCards])
 
-    const updateFlippedCards = (newFlippedCards: number[], newCards: CardState[]) => {
+    const updateFlippedCards = (newFlippedCards: number[], newCards: CardState[], changeTurn?: boolean) => {
         if (gameType === 'multiplayer' && currentMatch) {
             const updatedCards = newCards.map(card => ({
                 ...card,
-                isFlipped: card.isFlipped || newFlippedCards.includes(card.id)
+                isFlipped: newFlippedCards.includes(card.id) || card.isMatched
             }))
-            set(ref(database, `matches/${currentMatch.id}/board`), updatedCards)
+            const updates: any = { board: updatedCards }
+
+            // Update turn if specified
+            if (changeTurn) {
+                const nextTurn = currentMatch.turn === 'p1' ? 'p2' : 'p1'
+                updates.turn = nextTurn
+            }
+
+            set(ref(database, `matches/${currentMatch.id}`), {
+                ...currentMatch,
+                ...updates
+            })
         } else {
             setFlippedCards(newFlippedCards)
             setCards(newCards)
@@ -236,6 +257,15 @@ export default function Game() {
     }
 
     const handleCardPress = (cardState: CardState) => {
+        if (gameType === 'multiplayer') {
+            // Check if it's not the player's turn
+            const isPlayerOne = currentMatch?.p1.uid === user?.uid
+            const isCorrectTurn = (isPlayerOne && currentMatch?.turn === 'p1') ||
+                (!isPlayerOne && currentMatch?.turn === 'p2')
+
+            if (!isCorrectTurn) return
+        }
+
         if (!isPlayerTurn || flippedCards.length === 2 || cardState.isMatched || cardState.isFlipped) {
             return
         }
@@ -244,8 +274,11 @@ export default function Game() {
         const card = newCards.find(c => c.id === cardState.id)
         if (!card) return
 
+        const newFlippedCards = flippedCards.length === 1
+            ? [...flippedCards, cardState.id]
+            : [cardState.id]
+
         card.isFlipped = true
-        const newFlippedCards = [...flippedCards, cardState.id]
         updateFlippedCards(newFlippedCards, newCards)
 
         if (newFlippedCards.length === 2) {
@@ -260,20 +293,22 @@ export default function Game() {
                 updateFlippedCards([], newCards)
                 setPlayerScore(prev => prev + 1)
             } else {
-                // No match
+                // No match - change turn in multiplayer
                 setMistakes(prev => prev + 1)
                 setTimeout(() => {
                     const cardsToUpdate = newCards.map(c => ({
                         ...c,
-                        isFlipped: c.isFlipped && !newFlippedCards.includes(c.id)
+                        isFlipped: c.isMatched
                     }))
-                    updateFlippedCards([], cardsToUpdate)
+                    updateFlippedCards([], cardsToUpdate, gameType === 'multiplayer')
                     if (gameType === 'single-ai') {
                         setIsPlayerTurn(false)
                         setTimeout(makeAIMove, 500)
                     }
                 }, 1000)
             }
+        } else {
+            setFlippedCards(newFlippedCards)
         }
     }
 
