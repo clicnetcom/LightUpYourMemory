@@ -48,12 +48,22 @@ export default function Game() {
     const [isMaster, setIsMaster] = useState(true)
 
     useEffect(() => {
+        console.log('currentMatch received')
         if (gameType !== 'multiplayer') {
             return
         }
 
         console.log('setting board', currentMatch)
-        setCards(currentMatch?.board || [])
+        const newCards = currentMatch?.board || []
+        const newFlippedCards = newCards.reduce((acc, card, index) => {
+            if (card.isFlipped) acc.push(index)
+            return acc
+        }, [] as number[])
+        console.log('received flipped cards', newFlippedCards)
+        setCards(newCards)
+        setFlippedCards(newFlippedCards)
+
+
     }, [currentMatch])
 
 
@@ -207,41 +217,57 @@ export default function Game() {
         }
     }, [cards])
 
-    const handleCardPress = (cardState: CardState) => {
-        const cardIndex = currentMatch?.board?.findIndex(card => card.id === cardState.id)
-        const cardId = cardIndex || 0
 
-        if (!isPlayerTurn || flippedCards.length === 2 || cards[cardId].isMatched || cards[cardId].isFlipped) {
+    useEffect(() => {
+        console.log('setting flipped cards', flippedCards)
+    }, [flippedCards])
+
+    const updateFlippedCards = (newFlippedCards: number[], newCards: CardState[]) => {
+        if (gameType === 'multiplayer' && currentMatch) {
+            const updatedCards = newCards.map(card => ({
+                ...card,
+                isFlipped: card.isFlipped || newFlippedCards.includes(card.id)
+            }))
+            set(ref(database, `matches/${currentMatch.id}/board`), updatedCards)
+        } else {
+            setFlippedCards(newFlippedCards)
+            setCards(newCards)
+        }
+    }
+
+    const handleCardPress = (cardState: CardState) => {
+        if (!isPlayerTurn || flippedCards.length === 2 || cardState.isMatched || cardState.isFlipped) {
             return
         }
 
         const newCards = [...cards]
-        const card = newCards[cardId]
-        if (card) {
-            card.isFlipped = true
-            setCards(newCards)
-        }
+        const card = newCards.find(c => c.id === cardState.id)
+        if (!card) return
 
-        const newFlippedCards = [...flippedCards, cardId]
-        setFlippedCards(newFlippedCards)
+        card.isFlipped = true
+        const newFlippedCards = [...flippedCards, cardState.id]
+        updateFlippedCards(newFlippedCards, newCards)
 
         if (newFlippedCards.length === 2) {
-            const [firstCard, secondCard] = newFlippedCards
-            if (cards[firstCard].value === cards[secondCard].value) {
+            const [firstCardId, secondCardId] = newFlippedCards
+            const firstCard = newCards.find(c => c.id === firstCardId)
+            const secondCard = newCards.find(c => c.id === secondCardId)
+
+            if (firstCard && secondCard && firstCard.value === secondCard.value) {
                 // Match found
-                newCards[firstCard].isMatched = true
-                newCards[secondCard].isMatched = true
-                setCards(newCards)
-                setFlippedCards([])
+                firstCard.isMatched = true
+                secondCard.isMatched = true
+                updateFlippedCards([], newCards)
                 setPlayerScore(prev => prev + 1)
             } else {
                 // No match
                 setMistakes(prev => prev + 1)
                 setTimeout(() => {
-                    newCards[firstCard].isFlipped = false
-                    newCards[secondCard].isFlipped = false
-                    setCards(newCards)
-                    setFlippedCards([])
+                    const cardsToUpdate = newCards.map(c => ({
+                        ...c,
+                        isFlipped: c.isFlipped && !newFlippedCards.includes(c.id)
+                    }))
+                    updateFlippedCards([], cardsToUpdate)
                     if (gameType === 'single-ai') {
                         setIsPlayerTurn(false)
                         setTimeout(makeAIMove, 500)
