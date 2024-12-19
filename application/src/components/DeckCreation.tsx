@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Image, TouchableOpacity } from 'react-native'
+import { View, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { Text, Button, TextInput } from 'react-native-paper'
 import { useTheme } from '@/useTheme'
 import { useStore } from '@/useStore'
@@ -17,6 +17,8 @@ export default function DeckCreation({ goBack, onSelect }: { goBack: () => void,
 
     const [decks, setDecks] = useStore(state => [state.decks, state.setDecks])
 
+    const [isLoading, setIsLoading] = useState(false)
+
     const pickImages = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -31,6 +33,7 @@ export default function DeckCreation({ goBack, onSelect }: { goBack: () => void,
 
     const handleSubmit = async () => {
         if (images.length < 2 || !title) return
+        setIsLoading(true)
 
         try {
             const newDeckId = Date.now().toString()
@@ -70,6 +73,7 @@ export default function DeckCreation({ goBack, onSelect }: { goBack: () => void,
 
         } catch (error) {
             console.error('Error creating deck:', error)
+            setIsLoading(false)
         }
     }
 
@@ -108,16 +112,17 @@ export default function DeckCreation({ goBack, onSelect }: { goBack: () => void,
                     />
                 ))}
             </View>
-            <View style={{ flexDirection: 'row', gap: 8 }}>
-                <Button mode="outlined" onPress={goBack}>Cancel</Button>
-                <Button
-                    mode="contained"
-                    onPress={handleSubmit}
-                    disabled={images.length < 2 || !title}
-                >
-                    Create Deck
-                </Button>
-            </View>
+            {isLoading ? <ActivityIndicator size="large" color={theme.colors.primary} /> :
+                <View style={{ flexDirection: 'row', gap: 8 }}>
+                    <Button mode="outlined" onPress={goBack}>Cancel</Button>
+                    <Button
+                        mode="contained"
+                        onPress={handleSubmit}
+                        disabled={images.length < 2 || !title}
+                    >
+                        Create Deck
+                    </Button>
+                </View>}
         </View>
     )
 }

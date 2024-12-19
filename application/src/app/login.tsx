@@ -8,11 +8,11 @@ import { router } from 'expo-router'
 
 export default function SignupPage() {
     const theme = useTheme()
-    const [loading, setLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
     const handleGoogleSignIn = async () => {
-        setLoading(true)
+        setIsLoading(true)
         setError(null)
         try {
             const provider = new GoogleAuthProvider()
@@ -22,12 +22,12 @@ export default function SignupPage() {
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred')
         } finally {
-            setLoading(false)
+            setIsLoading(false)
         }
     }
 
     const handleAnonymousSignIn = async () => {
-        setLoading(true)
+        setIsLoading(true)
         setError(null)
         try {
             await signInAnonymously(auth)
@@ -35,7 +35,7 @@ export default function SignupPage() {
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred')
         } finally {
-            setLoading(false)
+            setIsLoading(false)
         }
     }
 
@@ -55,7 +55,7 @@ export default function SignupPage() {
                 Welcome to LightUpYourMemory
             </Text>
 
-            {loading ? (
+            {isLoading ? (
                 <ActivityIndicator size="large" color={theme.colors.primary} />
             ) : (
                 <Fragment>
