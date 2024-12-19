@@ -10,7 +10,7 @@ import { Text, Portal, Modal, Button } from "react-native-paper"
 import CardView from "@/components/CardView"
 import EndScreen from "@/components/EndScreen"
 import { formatTime } from "@/utils"
-import { get, ref, set, onValue } from "firebase/database"
+import { get, ref, set, onValue, remove } from "firebase/database"
 import { database } from "@/firebase"
 import Matchmaking from "@/components/Matchmaking"
 import Waiting from "@/components/Waiting"
@@ -93,6 +93,7 @@ export default function Game() {
 
         return () => {
             console.log('Removing game', currentMatch)
+            remove(ref(database, `matches/${newMatch.id}`))
             setCurrentMatch(null)
             unsubscribe()
         }
