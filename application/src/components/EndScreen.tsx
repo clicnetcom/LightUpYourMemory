@@ -72,10 +72,11 @@ export default function EndScreen({
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
 
-                {!!handlePlayAgain &&
+                {!handlePlayAgain &&
                     <Button
                         mode="contained"
                         onPress={handlePlayAgain}
+                        disabled={!handlePlayAgain}
                         style={{ flex: 1, marginRight: 8 }}
                     >
                         Play Again
