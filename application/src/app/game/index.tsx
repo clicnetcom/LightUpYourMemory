@@ -240,7 +240,7 @@ export default function Game() {
             const updates: any = {
                 board: newCards.map(card => ({
                     ...card,
-                    isFlipped: newFlippedCards.includes(card.id) || card.isMatched
+                    isFlipped: newFlippedCards.includes(card.id),
                 }))
             }
 
@@ -281,11 +281,13 @@ export default function Game() {
 
     const handleCardPress = (cardState: CardState) => {
         if (gameType === 'multiplayer') {
+
             const isPlayerOne = currentMatch?.p1.uid === user?.uid
             const isPlayerTwo = currentMatch?.p2?.uid === user?.uid
             const isCorrectTurn = (isPlayerOne && currentMatch?.turn === 'p1') ||
                 (isPlayerTwo && currentMatch?.turn === 'p2')
 
+            console.log('multiplayer', isPlayerOne, isPlayerTwo, isCorrectTurn)
             if (!isCorrectTurn) return
         }
 
@@ -311,7 +313,10 @@ export default function Game() {
 
             if (firstCard && secondCard && firstCard.value === secondCard.value) {
                 firstCard.isMatched = true
+                firstCard.isFlipped = false
                 secondCard.isMatched = true
+                secondCard.isFlipped = false
+                console.log('Matched cards:', firstCard, secondCard, newCards)
                 updateFlippedCards([], newCards, false)
                 setPlayerScore(prev => prev + 1)
             } else {
