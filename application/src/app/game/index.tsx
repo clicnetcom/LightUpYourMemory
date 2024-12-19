@@ -208,13 +208,18 @@ export default function Game() {
     }, [cards])
 
     const handleCardPress = (cardId: number) => {
+        console.log('pressed', cardId)
+
         if (!isPlayerTurn || flippedCards.length === 2 || cards[cardId].isMatched || cards[cardId].isFlipped) {
             return
         }
 
         const newCards = [...cards]
-        newCards[cardId].isFlipped = true
-        setCards(newCards)
+        const card = newCards.find(c => c.id === cardId)
+        if (card) {
+            card.isFlipped = true
+            setCards(newCards)
+        }
 
         const newFlippedCards = [...flippedCards, cardId]
         setFlippedCards(newFlippedCards)
