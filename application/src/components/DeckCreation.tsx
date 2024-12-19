@@ -4,14 +4,18 @@ import { Text, Button, TextInput } from 'react-native-paper'
 import { useTheme } from '@/useTheme'
 import { useStore } from '@/useStore'
 import * as ImagePicker from 'expo-image-picker'
-import { push, ref, update } from 'firebase/database'
+import { push, ref, set, update } from 'firebase/database'
 import { database } from '@/firebase'
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { storage } from '@/firebase'
 
 export default function DeckCreation({ goBack, onSelect }: { goBack: () => void, onSelect: (deck: Deck) => void }) {
     const theme = useTheme()
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([])
+
+    const [decks, setDecks] = useStore(state => [state.decks, state.setDecks])
 
     const pickImages = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -26,48 +30,39 @@ export default function DeckCreation({ goBack, onSelect }: { goBack: () => void,
     }
 
     const handleSubmit = async () => {
-        const uploadPromises = images.map(async image => {
-            const formData = new FormData()
-            formData.append('file', {
-                uri: image.uri,
-                type: 'image/jpeg',
-                name: image.uri.split('/').pop() || 'image.jpg'
-            } as any)
+        if (images.length < 2 || !title) return
 
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData
+        try {
+            const newDeckId = Date.now().toString()
+            const uploadPromises = images.map(async (image) => {
+                const response = await fetch(image.uri)
+                const blob = await response.blob()
+                const fileName = `${newDeckId}/image-${image.uri.split('/').pop()}`
+                const fileRef = storageRef(storage, fileName)
+                await uploadBytes(fileRef, blob)
+                return `gs://lightupyourmemory.firebasestorage.app/${fileName}`
             })
 
-            const { url } = await response.json()
-            return url
-        })
+            const newDeck: Deck = {
+                id: newDeckId,
+                title,
+                description,
+                type: 'image',
+                cards: await Promise.all(uploadPromises)
+            }
 
-        const urls = await Promise.all(uploadPromises)
+            await update(ref(database, `decks/${newDeck.id}`), newDeck).then(() => {
+                console.log('Deck created successfully')
+                setDecks([...decks, newDeck])
+                setTimeout(() => {
+                    onSelect(newDeck)
+                    goBack()
+                }, 200)
+            })
 
-
-        const newDeck: Deck = {
-            id: Date.now().toString(),
-            title: title,
-            description: description,
-            type: 'image',
-            cards: urls
-        }
-
-        update(ref(database, `decks${newDeck.id}`), {
-            title,
-            description,
-            type: 'image',
-            cards: urls
-        }).then(() => {
-            console.log('Deck created successfully')
-            onSelect(newDeck)
-            goBack()
-        }).catch((error) => {
+        } catch (error) {
             console.error('Error creating deck:', error)
-        })
-
-        goBack()
+        }
     }
 
     return (
