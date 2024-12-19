@@ -37,7 +37,7 @@ export default function DeckCreation({ goBack, onSelect }: { goBack: () => void,
             const uploadPromises = images.map(async (image) => {
                 const response = await fetch(image.uri)
                 const blob = await response.blob()
-                const fileName = `${newDeckId}/image-${image.uri.split('/').pop()}`
+                const fileName = `${newDeckId}/image${Date.now().toString()}-${image.uri.split('/').pop()}`
                 const fileRef = storageRef(storage, fileName)
                 await uploadBytes(fileRef, blob)
                 return `gs://lightupyourmemory.firebasestorage.app/${fileName}`
