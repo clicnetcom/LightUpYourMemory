@@ -52,7 +52,11 @@ export default function Game() {
     const [opponentScore, setOpponentScore] = useState(0)
 
     useEffect(() => {
-        console.log('game --', currentMatch)
+        console.log('currentMatch changed', currentMatch)
+    }, [currentMatch])
+
+    useEffect(() => {
+        console.log('Starting game', currentMatch)
         if (!user) {
             setTimeout(() => {
                 router.replace('/home')
@@ -272,8 +276,6 @@ export default function Game() {
         )
     }
     if (currentMatch && gameType === 'multiplayer' && !currentMatch.p2?.uid) {
-        console.log('opponent', currentMatch.p2)
-        console.log('deck', currentMatch.deck)
         if (currentMatch.deck && !currentMatch.p2?.uid) {
             return <Waiting />
         }

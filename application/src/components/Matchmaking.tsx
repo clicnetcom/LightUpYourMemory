@@ -63,6 +63,10 @@ export default function Matchmaking() {
                 type: 'multiplayer',
                 deck: match.deck,
                 p1: match.p1,
+                p2: {
+                    uid: user.uid,
+                    name: user.displayName || 'Me'
+                }
             })
         }).catch((error) => {
             console.error("Error joining match:", error)
