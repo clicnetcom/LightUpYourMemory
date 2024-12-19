@@ -52,13 +52,15 @@ export default function Matchmaking() {
     const handleJoinMatch = (match: Match) => {
         if (!user) return
 
-        const joinedMatch = {
+        const joinedMatch: Match = {
             ...match,
             p2: {
                 uid: user.uid,
                 name: user.displayName || 'Anon'
             },
-            turn: 'p1'  // Ensure turn is set when joining
+            turn: match.turn || 'p1',
+            board: match.board || [],
+            chat: match.chat || []
         }
 
         update(ref(database, `matches/${match.id}`), joinedMatch)

@@ -3,7 +3,7 @@ import DeckSelection from "@/components/DeckSelection"
 import { useStore } from "@/useStore"
 import { useTheme } from "@/useTheme"
 import { useLocalSearchParams, useNavigation, router } from "expo-router"
-import React, { useCallback } from "react"
+import React, { useCallback, useRef } from "react"
 import { useEffect, useState } from "react"
 import { View, FlatList, useWindowDimensions, StyleSheet, Pressable, Animated } from "react-native"
 import { Text, Portal, Modal, Button } from "react-native-paper"
@@ -48,19 +48,73 @@ export default function Game() {
     const [isMaster, setIsMaster] = useState(true)
     const [opponent, setOpponent] = useState<Player | null>(null)
 
+    const listenerRef = useRef<string | null>(null)
+
     useEffect(() => {
-        console.log('currentMatch received')
-        if (gameType !== 'multiplayer') {
+        if (!currentMatch?.id || !user) return
+
+        if (listenerRef.current === currentMatch.id) return
+
+        console.log('Setting up listener for match:', currentMatch.id)
+        listenerRef.current = currentMatch.id
+
+        const gameRef = ref(database, `matches/${currentMatch.id}`)
+        const unsubscribe = onValue(gameRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const gameData = snapshot.val()
+                console.log('game data received:', gameData)
+                setCurrentMatch(gameData)
+            }
+        })
+
+        return () => {
+            unsubscribe()
+            listenerRef.current = null
+        }
+    }, [currentMatch?.id, user])
+
+    useEffect(() => {
+        console.log('Starting game', currentMatch)
+        if (!user) {
+            setTimeout(() => {
+                router.replace('/home')
+            }, 100)
             return
         }
 
-        console.log('setting board', currentMatch)
+        if (!currentMatch?.id) {
+            const newMatch = {
+                id: Date.now().toString(),
+                type: gameType,
+                turn: 'p1',
+                p1: {
+                    uid: user?.uid || '',
+                    name: user?.displayName || 'Anon'
+                },
+            }
+            setCurrentMatch(newMatch)
+        }
+
+        return () => {
+            console.log('Cleaning up game')
+            if (currentMatch?.p1.uid === user.uid) {
+                remove(ref(database, `matches/${currentMatch.id}`))
+            }
+            setCurrentMatch(null)
+        }
+    }, [navigation, gameType, user])
+
+    useEffect(() => {
+        if (gameType !== 'multiplayer') {
+            return
+        }
         const newCards = currentMatch?.board || []
         const newFlippedCards = newCards.reduce((acc, card, index) => {
             if (card.isFlipped) acc.push(index)
             return acc
         }, [] as number[])
-        console.log('received flipped cards', newFlippedCards)
+
+        console.log('setting board', currentMatch, 'received flipped cards', newFlippedCards)
         setCards(newCards)
         setFlippedCards(newFlippedCards)
 
@@ -76,57 +130,10 @@ export default function Game() {
                 (currentMatch.turn === 'p2' && isPlayerTwo)
             setIsPlayerTurn(isMyTurn)
 
-            // Set opponent without updating currentMatch
             const newOpponent = isPlayerOne ? currentMatch.p2 : currentMatch.p1
             setOpponent(newOpponent || null)
         }
     }, [currentMatch, user])
-
-    useEffect(() => {
-        console.log('Starting game', currentMatch)
-        if (!user) {
-            setTimeout(() => {
-                router.replace('/home')
-            }, 100)
-            return
-        }
-
-        // Only create a new match if we're not already in one
-        if (!currentMatch?.id) {
-            const newMatch = {
-                id: Date.now().toString(),
-                type: gameType,
-                turn: 'p1',
-                p1: {
-                    uid: user?.uid || '',
-                    name: user?.displayName || 'Anon'
-                },
-            }
-            setCurrentMatch(newMatch)
-        }
-
-        // Always set up the listener using the current match ID
-        const matchId = currentMatch?.id || Date.now().toString()
-        console.log('adding game listener to', matchId)
-
-        const gameRef = ref(database, `matches/${matchId}`)
-        const unsubscribe = onValue(gameRef, (snapshot) => {
-            if (snapshot.exists()) {
-                const gameData = snapshot.val()
-                console.log('game data received:', gameData)
-                setCurrentMatch(gameData)
-            }
-        })
-
-        return () => {
-            console.log('Cleaning up game')
-            if (currentMatch?.p1.uid === user.uid) {
-                remove(ref(database, `matches/${matchId}`))
-            }
-            setCurrentMatch(null)
-            unsubscribe()
-        }
-    }, [navigation, gameType, user])
 
     useEffect(() => {
         if (gameType === 'multiplayer') {
@@ -228,11 +235,6 @@ export default function Game() {
         }
     }, [cards])
 
-
-    useEffect(() => {
-        console.log('setting flipped cards', flippedCards)
-    }, [flippedCards])
-
     const updateFlippedCards = (newFlippedCards: number[], newCards: CardState[], changeTurn?: boolean) => {
         if (gameType === 'multiplayer' && currentMatch) {
             const updates: any = {
@@ -259,7 +261,6 @@ export default function Game() {
 
     useEffect(() => {
         if (gameType === 'multiplayer' && currentMatch) {
-            console.log('Turn changed:', currentMatch.turn)
             const isPlayerOne = currentMatch.p1.uid === user?.uid
             const isPlayerTwo = currentMatch.p2?.uid === user?.uid
             const isMyTurn = (currentMatch.turn === 'p1' && isPlayerOne) ||
@@ -276,7 +277,7 @@ export default function Game() {
             setCurrentTurn(currentMatch.turn || 'p1')
             setOpponent(isPlayerOne ? currentMatch.p2 : currentMatch.p1)
         }
-    }, [currentMatch?.turn, user])
+    }, [currentMatch, user])
 
     const handleCardPress = (cardState: CardState) => {
         if (gameType === 'multiplayer') {
@@ -309,13 +310,11 @@ export default function Game() {
             const secondCard = newCards.find(c => c.id === secondCardId)
 
             if (firstCard && secondCard && firstCard.value === secondCard.value) {
-                // Match found
                 firstCard.isMatched = true
                 secondCard.isMatched = true
-                updateFlippedCards([], newCards)
+                updateFlippedCards([], newCards, false)
                 setPlayerScore(prev => prev + 1)
             } else {
-                // No match - change turn in multiplayer
                 setMistakes(prev => prev + 1)
                 setTimeout(() => {
                     const cardsToUpdate = newCards.map(c => ({
