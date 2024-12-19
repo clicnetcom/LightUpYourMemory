@@ -51,11 +51,19 @@ export default function DeckCreation({ goBack, onSelect }: { goBack: () => void,
                 cards: await Promise.all(uploadPromises)
             }
 
-            await update(ref(database, `decks/${newDeck.id}`), newDeck).then(() => {
+            await update(ref(database, `decks/${newDeck.id}`), newDeck).then(async () => {
                 console.log('Deck created successfully')
-                setDecks([...decks, newDeck])
+
+                const newDeckWithUrls: Deck = {
+                    ...newDeck,
+                    cards: await Promise.all(newDeck.cards.map(async (card) => {
+                        return await getDownloadURL(storageRef(storage, card))
+                    }))
+                }
+
+                setDecks([...decks, newDeckWithUrls])
                 setTimeout(() => {
-                    onSelect(newDeck)
+                    onSelect(newDeckWithUrls)
                     goBack()
                 }, 200)
             })
