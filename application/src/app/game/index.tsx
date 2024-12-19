@@ -215,7 +215,7 @@ export default function Game() {
         }
 
         const newCards = [...cards]
-        const card = newCards.find(c => c.id === cardId)
+        const card = newCards[cardId]
         if (card) {
             card.isFlipped = true
             setCards(newCards)
