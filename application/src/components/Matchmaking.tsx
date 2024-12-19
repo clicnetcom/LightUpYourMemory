@@ -52,30 +52,23 @@ export default function Matchmaking() {
     const handleJoinMatch = (match: Match) => {
         if (!user) return
 
-        console.log('joining match', match)
-        update(ref(database, `matches/${match.id}`), {
+        const joinedMatch = {
+            ...match,
             p2: {
                 uid: user.uid,
-                name: user.displayName
-            }
-        }).then(() => {
-            console.log('Joined match successfully')
-            setCurrentMatch({
-                id: match.id,
-                type: 'multiplayer',
-                deck: match.deck,
-                p1: match.p1,
-                p2: {
-                    uid: user.uid,
-                    name: user.displayName || 'Me'
-                },
-                board: match.board,
-                turn: 'p1',
-                chat: match.board
-            } as Match)
-        }).catch((error) => {
-            console.error("Error joining match:", error)
-        })
+                name: user.displayName || 'Anon'
+            },
+            turn: 'p1'  // Ensure turn is set when joining
+        }
+
+        update(ref(database, `matches/${match.id}`), joinedMatch)
+            .then(() => {
+                console.log('Joined match successfully', joinedMatch)
+                setCurrentMatch(joinedMatch)
+            })
+            .catch((error) => {
+                console.error("Error joining match:", error)
+            })
     }
 
     const onDeckSelect = (deck: Deck) => {
