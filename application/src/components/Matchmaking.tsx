@@ -7,6 +7,7 @@ import { database } from "@/firebase"
 import { get, ref, update, push, onValue } from "firebase/database"
 import { FlatList } from "react-native-gesture-handler"
 import DeckSelection from "./DeckSelection"
+import { router } from "expo-router"
 
 export default function Matchmaking() {
     const theme = useTheme()
@@ -63,6 +64,10 @@ export default function Matchmaking() {
                 deck: match.deck,
                 p1: match.p1,
             })
+
+            setTimeout(() => {
+                router.push('/player2')
+            }, 100)
         }).catch((error) => {
             console.error("Error joining match:", error)
         })
