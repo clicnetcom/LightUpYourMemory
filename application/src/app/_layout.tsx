@@ -60,8 +60,8 @@ export default function AppLayout() {
             if (snapshot.exists()) {
                 const data = snapshot.val()
                 const existingDeckIds = new Set(decks.map(deck => deck.id))
-                if (!data) return
-                const newDecksData = data.filter((deck: any) => !existingDeckIds.has(deck.id))
+
+                const newDecksData = Object.values(data).filter((deck: any) => !existingDeckIds.has(deck.id))
 
                 if (newDecksData.length === 0) return
 
