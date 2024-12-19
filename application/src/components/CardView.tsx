@@ -9,7 +9,7 @@ type CardViewProps = {
         isMatched: boolean
         id: number
     }[]
-    onCardPress: (cardId: CardState) => void,
+    onCardPress: (card: CardState) => void,
     deckType: DeckType
 }
 
