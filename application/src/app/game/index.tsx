@@ -104,6 +104,13 @@ export default function Game() {
         }
     }, [navigation, gameType, user])
 
+    const handleGoHome = () => {
+        if (currentMatch?.p1.uid === user?.uid) {
+            remove(ref(database, `matches/${currentMatch?.id}`))
+        }
+        setCurrentMatch(null)
+        router.push('/home')
+    }
     useEffect(() => {
         if (gameType !== 'multiplayer') {
             return
@@ -412,6 +419,22 @@ export default function Game() {
         }
     }, [currentMatch, user])
 
+    // Add this helper function near the top of the component
+    const getPlayerScores = useCallback(() => {
+        if (!currentMatch || !user || gameType !== 'multiplayer') {
+            return { myScore: playerScore, theirScore: opponentScore }
+        }
+
+        const isPlayerOne = currentMatch.p1.uid === user.uid
+        return {
+            myScore: isPlayerOne ? currentMatch.p1Score || 0 : currentMatch.p2Score || 0,
+            theirScore: isPlayerOne ? currentMatch.p2Score || 0 : currentMatch.p1Score || 0
+        }
+    }, [currentMatch, user, gameType, playerScore, opponentScore])
+
+    // Replace the score display section with this:
+    const { myScore, theirScore } = getPlayerScores()
+
     if (!Object.keys(GAME_TITLES).includes(gameType)) {
         return (
             <View style={{
@@ -512,7 +535,7 @@ export default function Game() {
                     alignItems: 'center',
                 }}>
                     <Text variant="headlineMedium">
-                        {`${playerScore}x${opponentScore}`}
+                        {`${myScore}x${theirScore}`}
                     </Text>
                 </View>
                 <View style={{
@@ -545,8 +568,9 @@ export default function Game() {
                 timer={timer}
                 gameType={gameType}
                 handlePlayAgain={handlePlayAgain}
-                playerScore={playerScore}
-                opponentScore={opponentScore}
+                handleGoHome={handleGoHome}
+                playerScore={myScore}
+                opponentScore={theirScore}
                 match={currentMatch}
                 user={user}
             />

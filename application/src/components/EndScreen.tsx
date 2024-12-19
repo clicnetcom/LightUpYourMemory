@@ -11,6 +11,7 @@ type Props = {
     timer: number
     gameType: GameType
     handlePlayAgain?: () => void
+    handleGoHome?: () => void
     playerScore: number
     opponentScore: number
     match?: Match
@@ -23,6 +24,7 @@ export default function EndScreen({
     timer,
     gameType,
     handlePlayAgain,
+    handleGoHome,
     playerScore,
     opponentScore,
     match,
@@ -47,7 +49,7 @@ export default function EndScreen({
     return (<Portal>
         <Modal
             visible={isGameComplete}
-            onDismiss={() => router.push('/home')}
+            onDismiss={handleGoHome}
             contentContainerStyle={{
                 backgroundColor: theme.colors.background,
                 padding: 20,
@@ -102,7 +104,7 @@ export default function EndScreen({
                 }
                 <Button
                     mode="outlined"
-                    onPress={() => router.push('/home')}
+                    onPress={handleGoHome}
                     style={{ flex: 1, marginLeft: 8 }}
                 >
                     Home
