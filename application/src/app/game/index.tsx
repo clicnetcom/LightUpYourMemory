@@ -207,8 +207,9 @@ export default function Game() {
         }
     }, [cards])
 
-    const handleCardPress = (cardId: number) => {
-        console.log('pressed', cardId)
+    const handleCardPress = (cardState: CardState) => {
+        const cardIndex = currentMatch?.board?.findIndex(card => card.id === cardState.id)
+        const cardId = cardIndex || 0
 
         if (!isPlayerTurn || flippedCards.length === 2 || cards[cardId].isMatched || cards[cardId].isFlipped) {
             return
