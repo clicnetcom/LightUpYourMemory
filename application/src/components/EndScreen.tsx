@@ -10,7 +10,7 @@ type Props = {
     mistakes: number
     timer: number
     gameType: GameType
-    handlePlayAgain: () => void
+    handlePlayAgain?: () => void
     playerScore: number
     opponentScore: number
 }
@@ -71,13 +71,16 @@ export default function EndScreen({
             }
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
-                <Button
-                    mode="contained"
-                    onPress={handlePlayAgain}
-                    style={{ flex: 1, marginRight: 8 }}
-                >
-                    Play Again
-                </Button>
+
+                {!!handlePlayAgain &&
+                    <Button
+                        mode="contained"
+                        onPress={handlePlayAgain}
+                        style={{ flex: 1, marginRight: 8 }}
+                    >
+                        Play Again
+                    </Button>
+                }
                 <Button
                     mode="outlined"
                     onPress={() => router.push('/home')}
