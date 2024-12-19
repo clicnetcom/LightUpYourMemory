@@ -14,6 +14,7 @@ import { get, ref, set, onValue } from "firebase/database"
 import { database } from "@/firebase"
 import Matchmaking from "@/components/Matchmaking"
 import Waiting from "@/components/Waiting"
+import Chat from "@/components/Chat"
 
 const GAME_TITLES: Record<GameType, string> = {
     'single': 'Single Player',
@@ -381,6 +382,8 @@ export default function Game() {
                 cards={cards}
                 onCardPress={handleCardPress}
             />
+            {currentMatch && <Chat match={currentMatch} />}
+
             <EndScreen
                 isGameComplete={isGameComplete}
                 mistakes={mistakes}
