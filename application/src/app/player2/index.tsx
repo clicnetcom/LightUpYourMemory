@@ -46,7 +46,7 @@ export default function Game() {
 
     useEffect(() => {
         if (!currentMatch) return
-        console.log('adding game listener to', currentMatch.id)
+        console.log('player 2 adding game listener to', currentMatch.id)
 
         navigation.setOptions({
             header: () => <CustomHeader
