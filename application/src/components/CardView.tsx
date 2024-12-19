@@ -9,7 +9,7 @@ type CardViewProps = {
         isMatched: boolean
         id: number
     }[]
-    onCardPress: (cardId: number) => void,
+    onCardPress: (cardId: CardState) => void,
     deckType: DeckType
 }
 
@@ -54,7 +54,7 @@ export default function CardView({ cards, onCardPress, deckType }: CardViewProps
                 scrollEnabled={false}
                 renderItem={({ item }) => (
                     <Pressable
-                        onPress={() => onCardPress(item.id)}
+                        onPress={() => onCardPress(item)}
                         style={{
                             width: CARD_SIZE,
                             height: CARD_SIZE,
