@@ -2,7 +2,7 @@ import { useTheme } from "@/useTheme"
 import { useStore } from "@/useStore"
 import { View, ScrollView, Image } from "react-native"
 import { Text, Button, TextInput, SegmentedButtons } from "react-native-paper"
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { database } from "@/firebase"
 import { get, ref, update, push, onValue } from "firebase/database"
 import { FlatList } from "react-native-gesture-handler"
@@ -149,55 +149,69 @@ export default function Matchmaking() {
                             {item.p2 && (
                                 <Text>Somebody is playing</Text>
                             )}
+
+
                             {!item.p2 && (
-                                <Button
-                                    mode="contained"
-                                    onPress={() => handleJoinMatch(item)}
-                                >
-                                    Join
-                                </Button>
+                                <Fragment>
+                                    {item.password && (
+                                        <TextInput
+                                            label="Password"
+                                            value={password}
+                                            onChangeText={setPassword}
+                                            secureTextEntry
+                                        />)}
+                                    <Button
+                                        disabled={!!item?.password && password !== item?.password}
+                                        mode="contained"
+                                        onPress={() => handleJoinMatch(item)}>
+                                        Join
+                                    </Button>
+                                </Fragment>
                             )}
                         </View>
-                    )}
+                    )
+                    }
                 />
             )}
 
-            {activeTab === 'create' && (
-                <View style={{
-                    flex: 1,
-                    padding: 16,
-                    gap: 16,
-                    display: 'flex',
-                }}>
-
+            {
+                activeTab === 'create' && (
                     <View style={{
                         flex: 1,
-                        marginVertical: 8,
-                    }}>
-                        <DeckSelection onSelect={onDeckSelect} />
-                    </View>
-
-                    <View style={{
+                        padding: 16,
                         gap: 16,
+                        display: 'flex',
                     }}>
-                        <TextInput
-                            label="Password (optional)"
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry
-                        />
 
-                        <Button
-                            mode="contained"
-                            onPress={handleCreateMatch}
-                            loading={isCreating}
-                            disabled={isCreating || !user || !deck}
-                        >
-                            Create Match
-                        </Button>
+                        <View style={{
+                            flex: 1,
+                            marginVertical: 8,
+                        }}>
+                            <DeckSelection onSelect={onDeckSelect} />
+                        </View>
+
+                        <View style={{
+                            gap: 16,
+                        }}>
+                            <TextInput
+                                label="Password (optional)"
+                                value={password}
+                                onChangeText={setPassword}
+                                secureTextEntry
+                            />
+
+                            <Button
+                                mode="contained"
+                                onPress={handleCreateMatch}
+                                loading={isCreating}
+                                disabled={isCreating || !user || !deck}
+                            >
+                                Create Match
+                            </Button>
+                        </View>
                     </View>
-                </View>
-            )}
-        </View>
+                )
+            }
+        </View >
     )
 }
