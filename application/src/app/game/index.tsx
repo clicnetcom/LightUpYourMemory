@@ -23,13 +23,6 @@ const GAME_TITLES: Record<GameType, string> = {
     'multiplayer': 'Versus Player'
 }
 
-type CardState = {
-    value: string
-    isFlipped: boolean
-    isMatched: boolean
-    id: number
-}
-
 export default function Game() {
     const theme = useTheme()
     const navigation = useNavigation()
@@ -55,11 +48,14 @@ export default function Game() {
     const [isMaster, setIsMaster] = useState(true)
 
     useEffect(() => {
-        if (currentMatch?.p2?.uid === user?.uid) {
-            setIsMaster(false)
+        if (gameType !== 'multiplayer') {
+            return
         }
-        console.log('currentMatch changed', user?.uid, isMaster, currentMatch)
+
+        console.log('setting board', currentMatch)
+        setCards(currentMatch?.board || [])
     }, [currentMatch])
+
 
     useEffect(() => {
         console.log('Starting game', currentMatch)
@@ -112,12 +108,9 @@ export default function Game() {
     }, [navigation, gameType])
 
     useEffect(() => {
-        if (!isMaster) {
+        if (gameType === 'multiplayer') {
             return
         }
-
-
-
         if (deck) {
             const shuffledCards = [...deck.cards, ...deck.cards]
                 .sort(() => Math.random() - 0.5)
@@ -129,7 +122,7 @@ export default function Game() {
                 }))
             setCards(shuffledCards)
         }
-    }, [deck])
+    }, [deck, gameType])
 
     const finishGame = (win: boolean) => {
         setIsRunning(false)

@@ -32,8 +32,10 @@ export default function Matchmaking() {
                     p1: match.p1,
                     p2: match.p2,
                     deck: match.deck,
-                    password: match.password
-                }))
+                    password: match.password,
+                    chat: match.chat,
+                    board: match.board,
+                } as Match))
                 setMatches(matchesArray)
             } else {
                 setMatches([])
@@ -66,8 +68,11 @@ export default function Matchmaking() {
                 p2: {
                     uid: user.uid,
                     name: user.displayName || 'Me'
-                }
-            })
+                },
+                board: match.board,
+                turn: 'p1',
+                chat: match.board
+            } as Match)
         }).catch((error) => {
             console.error("Error joining match:", error)
         })
@@ -90,7 +95,8 @@ export default function Matchmaking() {
                     return {
                         id: index,
                         value: card,
-                        isFlipped: false
+                        isFlipped: false,
+                        isMatched: false
                     }
                 }).sort(() => Math.random() - 0.5),
                 chat: [

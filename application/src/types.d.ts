@@ -26,12 +26,13 @@ export declare global {
         deck?: string
         password?: string
         turn?: string
-        board?: {
-            id: number,
-            value: string,
-            isFlipped: boolean
-        }[],
+        board?: CardState[],
         chat?: string[]
     }
-
+    type CardState = {
+        id: number
+        value: string
+        isFlipped: boolean
+        isMatched: boolean
+    }
 }
