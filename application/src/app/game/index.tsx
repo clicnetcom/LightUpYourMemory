@@ -155,6 +155,13 @@ export default function Game() {
     const finishGame = (win: boolean) => {
         setIsRunning(false)
         setIsGameComplete(true)
+        if (gameType === 'multiplayer' && currentMatch) {
+            update(ref(database, `matches/${currentMatch.id}`), {
+                ...currentMatch,
+                isComplete: true,
+                winner: win ? currentMatch.p1.uid : currentMatch.p2?.uid
+            })
+        }
         get(ref(database, `users/${user?.uid}`)).then((snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val()
@@ -316,9 +323,21 @@ export default function Game() {
                 firstCard.isFlipped = false
                 secondCard.isMatched = true
                 secondCard.isFlipped = false
-                console.log('Matched cards:', firstCard, secondCard, newCards)
-                updateFlippedCards([], newCards, false)
-                setPlayerScore(prev => prev + 1)
+
+                if (gameType === 'multiplayer' && currentMatch) {
+                    const isPlayerOne = currentMatch.p1.uid === user?.uid
+                    const scoreField = isPlayerOne ? 'p1Score' : 'p2Score'
+                    const newScore = ((currentMatch[scoreField] || 0) + 1)
+
+                    update(ref(database, `matches/${currentMatch.id}`), {
+                        ...currentMatch,
+                        board: newCards,
+                        [scoreField]: newScore
+                    })
+                } else {
+                    updateFlippedCards([], newCards, false)
+                    setPlayerScore(prev => prev + 1)
+                }
             } else {
                 setMistakes(prev => prev + 1)
                 setTimeout(() => {
@@ -339,15 +358,8 @@ export default function Game() {
     }
 
     const handlePlayAgain = () => {
-        setIsGameComplete(false)
-        setMistakes(0)
-        setTimer(0)
-        setIsRunning(true)
-        setIsPlayerTurn(true)
-        setPlayerScore(0)
-        setOpponentScore(0)
-        if (deck) {
-            const shuffledCards = [...deck.cards, ...deck.cards]
+        if (gameType === 'multiplayer' && currentMatch) {
+            const shuffledCards = [...(deck?.cards || []), ...(deck?.cards || [])]
                 .sort(() => Math.random() - 0.5)
                 .map((card, index) => ({
                     value: card,
@@ -355,9 +367,50 @@ export default function Game() {
                     isMatched: false,
                     id: index,
                 }))
-            setCards(shuffledCards)
+
+            update(ref(database, `matches/${currentMatch.id}`), {
+                ...currentMatch,
+                board: shuffledCards,
+                p1Score: 0,
+                p2Score: 0,
+                isComplete: false,
+                winner: null,
+                turn: 'p1'
+            })
+        } else {
+            setIsGameComplete(false)
+            setMistakes(0)
+            setTimer(0)
+            setIsRunning(true)
+            setIsPlayerTurn(true)
+            setPlayerScore(0)
+            setOpponentScore(0)
+            if (deck) {
+                const shuffledCards = [...deck.cards, ...deck.cards]
+                    .sort(() => Math.random() - 0.5)
+                    .map((card, index) => ({
+                        value: card,
+                        isFlipped: false,
+                        isMatched: false,
+                        id: index,
+                    }))
+                setCards(shuffledCards)
+            }
         }
     }
+
+    useEffect(() => {
+        if (gameType === 'multiplayer' && currentMatch) {
+            const isPlayerOne = currentMatch.p1.uid === user?.uid
+            setPlayerScore(currentMatch.p1Score || 0)
+            setOpponentScore(currentMatch.p2Score || 0)
+
+            if (currentMatch.isComplete) {
+                setIsGameComplete(true)
+                setIsRunning(false)
+            }
+        }
+    }, [currentMatch, user])
 
     if (!Object.keys(GAME_TITLES).includes(gameType)) {
         return (

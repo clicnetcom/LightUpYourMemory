@@ -28,6 +28,10 @@ export declare global {
         turn?: string
         board?: CardState[],
         chat?: string[]
+        p1Score?: number
+        p2Score?: number
+        isComplete?: boolean
+        winner?: string | null
     }
     type CardState = {
         id: number
