@@ -71,7 +71,7 @@ export default function CardView({ cards, onCardPress, deckType }: CardViewProps
                                 alignItems: 'center',
                             }}
                         >
-                            {(item.isFlipped || item.isMatched) && (
+                            {(item.isFlipped || item.isMatched) ? (
                                 deckType === 'image' ? (
                                     <Image
                                         source={{ uri: item.value }}
@@ -87,7 +87,8 @@ export default function CardView({ cards, onCardPress, deckType }: CardViewProps
                                         <Text style={{ fontSize: CARD_SIZE * 0.8 }}>{item.value}</Text>
                                     )
                                 )
-                            )}
+                            ) : <Text>{item.value}</Text>}
+
                         </View>
                     </Pressable>
                 )}
