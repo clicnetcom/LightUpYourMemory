@@ -13,8 +13,9 @@ type Props = {
     handlePlayAgain?: () => void
     playerScore: number
     opponentScore: number
+    match?: Match
+    user?: { uid: string } | null
 }
-
 
 export default function EndScreen({
     isGameComplete,
@@ -24,8 +25,25 @@ export default function EndScreen({
     handlePlayAgain,
     playerScore,
     opponentScore,
+    match,
+    user
 }: Props) {
     const theme = useTheme()
+
+    const getScores = () => {
+        if (gameType !== 'multiplayer' || !match || !user) {
+            return { yourScore: playerScore, theirScore: opponentScore }
+        }
+
+        const isPlayerOne = match.p1.uid === user.uid
+        return {
+            yourScore: isPlayerOne ? match.p1Score || 0 : match.p2Score || 0,
+            theirScore: isPlayerOne ? match.p2Score || 0 : match.p1Score || 0
+        }
+    }
+
+    const { yourScore, theirScore } = getScores()
+
     return (<Portal>
         <Modal
             visible={isGameComplete}
@@ -52,17 +70,17 @@ export default function EndScreen({
                 </Text>
             )}
             {(gameType === 'multiplayer' || gameType === 'single-ai') && <Fragment >
-                {(playerScore === opponentScore ? (
+                {(yourScore === theirScore ? (
                     <Text variant="titleMedium">It's a tie!</Text>
                 ) : (
                     <Text variant="titleMedium">
-                        {playerScore > opponentScore ? 'You win!' : 'You lose!'}
+                        {yourScore > theirScore ? 'You win!' : 'You lose!'}
                     </Text>
                 ))}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
                     <View>
-                        <Text variant="titleMedium">Your Score: {playerScore}</Text>
-                        <Text variant="titleMedium">Opponent Score: {opponentScore}</Text>
+                        <Text variant="titleMedium">Your Score: {yourScore}</Text>
+                        <Text variant="titleMedium">Opponent Score: {theirScore}</Text>
                     </View>
                 </View>
 

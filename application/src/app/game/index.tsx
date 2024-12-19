@@ -547,6 +547,8 @@ export default function Game() {
                 handlePlayAgain={handlePlayAgain}
                 playerScore={playerScore}
                 opponentScore={opponentScore}
+                match={currentMatch}
+                user={user}
             />
         </View>
     )
