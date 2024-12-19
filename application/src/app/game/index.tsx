@@ -51,8 +51,14 @@ export default function Game() {
     const [playerScore, setPlayerScore] = useState(0)
     const [opponentScore, setOpponentScore] = useState(0)
 
+
+    const [isMaster, setIsMaster] = useState(true)
+
     useEffect(() => {
-        console.log('currentMatch changed', currentMatch)
+        if (currentMatch?.p2?.uid === user?.uid) {
+            setIsMaster(false)
+        }
+        console.log('currentMatch changed', user?.uid, isMaster, currentMatch)
     }, [currentMatch])
 
     useEffect(() => {
@@ -106,6 +112,12 @@ export default function Game() {
     }, [navigation, gameType])
 
     useEffect(() => {
+        if (!isMaster) {
+            return
+        }
+
+
+
         if (deck) {
             const shuffledCards = [...deck.cards, ...deck.cards]
                 .sort(() => Math.random() - 0.5)
