@@ -16,13 +16,6 @@ import Matchmaking from "@/components/Matchmaking"
 import Waiting from "@/components/Waiting"
 import Chat from "@/components/Chat"
 
-const GAME_TITLES: Record<GameType, string> = {
-    'single': 'Single Player',
-    'time-attack': 'Time Attack',
-    'single-ai': 'Versus AI',
-    'multiplayer': 'Versus Player'
-}
-
 type CardState = {
     value: string
     isFlipped: boolean
@@ -53,18 +46,12 @@ export default function Game() {
 
     useEffect(() => {
         if (!currentMatch) return
-
         console.log('adding game listener to', currentMatch.id)
-        if (!Object.keys(GAME_TITLES).includes(gameType)) {
-            setTimeout(() => {
-                router.replace('/home')
-            }, 2000)
-            return
-        }
+
         navigation.setOptions({
             header: () => <CustomHeader
                 items={[]}
-                title={GAME_TITLES[gameType]}
+                title={'Versus Player'}
             />
         })
 
@@ -153,59 +140,6 @@ export default function Game() {
                 }, 1000)
             }
         }
-    }
-
-
-    if (!Object.keys(GAME_TITLES).includes(gameType)) {
-        return (
-            <View style={{
-                backgroundColor: theme.colors.background,
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                <Text variant="headlineMedium" style={{ color: theme.colors.error }}>
-                    Invalid game type, redirecting home
-                </Text>
-            </View>
-        )
-    }
-    if (currentMatch && gameType === 'multiplayer' && !currentMatch.p2?.uid) {
-        console.log('opponent', currentMatch.p2)
-        console.log('deck', currentMatch.deck)
-        if (currentMatch.deck && !currentMatch.p2?.uid) {
-            return <Waiting />
-        }
-        return <Matchmaking />
-    }
-
-
-
-    const selectDeck = (deck: Deck) => {
-        if (currentMatch) {
-            setCurrentMatch({
-                ...currentMatch,
-                deck: deck.id
-            })
-        }
-    }
-    if (currentMatch && !currentMatch?.deck) {
-        return <DeckSelection onSelect={selectDeck} />
-    }
-
-    if (!deck) {
-        return (
-            <View style={{
-                backgroundColor: theme.colors.background,
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                <Text variant="headlineMedium" style={{ color: theme.colors.error }}>
-                    Invalid deck, redirecting home
-                </Text>
-            </View>
-        )
     }
 
     return (
