@@ -40,7 +40,7 @@ export default function CustomDrawerContent(props: any) {
                     {!user?.photoURL &&
                         <Avatar.Icon size={50} icon={"account"} style={{ marginBottom: 8 }} />
                     }
-                    <Text variant="titleMedium">{user?.displayName || "User"}</Text>
+                    <Text variant="titleMedium">{user?.displayName || t('drawer.user.defaultName')}</Text>
                     <Text variant="bodySmall">{user?.email}</Text>
                 </View>
                 <Drawer.Section >
@@ -49,7 +49,7 @@ export default function CustomDrawerContent(props: any) {
 
                 <TouchableRipple onPress={() => setIsAutoTheme(!isAutoTheme)}>
                     <View style={[styles.preference]}>
-                        <Text variant="labelLarge">Auto Theme</Text>
+                        <Text variant="labelLarge">{t('drawer.theme.auto')}</Text>
                         <View pointerEvents="none">
                             <Switch value={isAutoTheme} />
                         </View>
@@ -59,7 +59,7 @@ export default function CustomDrawerContent(props: any) {
                 {!isAutoTheme &&
                     <TouchableRipple onPress={() => setIsDarkTheme(!isDarkTheme)}>
                         <View style={[styles.preference]}>
-                            <Text variant="labelLarge">Dark Theme</Text>
+                            <Text variant="labelLarge">{t('drawer.theme.dark')}</Text>
                             <View pointerEvents="none">
                                 <Switch value={isDarkTheme} />
                             </View>
@@ -88,7 +88,7 @@ export default function CustomDrawerContent(props: any) {
                     onPress={handleLogout}
                     style={{ margin: 16 }}
                 >
-                    Logout
+                    {t('drawer.user.logout')}
                 </Button>
             </Drawer.Section>
         </View>

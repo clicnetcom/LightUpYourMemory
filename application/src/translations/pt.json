@@ -18,6 +18,14 @@
             "en": "Inglês",
             "de": "Alemão",
             "pt": "Português"
+        },
+        "theme": {
+            "auto": "Tema Automático",
+            "dark": "Tema Escuro"
+        },
+        "user": {
+            "defaultName": "Usuário",
+            "logout": "Sair"
         }
     }
 }

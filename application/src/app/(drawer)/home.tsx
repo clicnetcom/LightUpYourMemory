@@ -24,8 +24,8 @@ export default function HomePage() {
             <Drawer.Screen
                 options={{
                     headerShown: true,
-                    drawerLabel: t('home.title'),
-                    headerTitle: t('home.title'),
+                    drawerLabel: 'LightUpYourMemory',
+                    headerTitle: 'LightUpYourMemory',
                     headerLeft: () => (
                         <DrawerToggleButton tintColor={theme.colors.primary} />
                     ),
