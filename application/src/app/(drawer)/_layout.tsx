@@ -32,6 +32,12 @@ export default function AppLayout() {
             headerTitle: 'About the Application',
             headerShown: true
         },
+        {
+            name: 'dashboard',
+            drawerLabel: 'Admin Dashboard',
+            headerTitle: 'Admin Dashboard',
+            headerShown: true
+        },
     ]
     const hiddenScreens: string[] = []
 
