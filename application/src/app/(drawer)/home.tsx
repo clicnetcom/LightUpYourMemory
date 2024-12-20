@@ -8,7 +8,7 @@ import Logo from "@/components/Logo"
 
 export default function HomePage() {
     const theme = useTheme()
-    const [isConnected] = useStore(state => [state.isConnected, state.setIsConnected])
+    const [isConnected] = useStore(state => [state.isConnected])
     const { width } = useWindowDimensions()
     const CONTAINER_WIDTH = Math.min(300, width - 32)
 

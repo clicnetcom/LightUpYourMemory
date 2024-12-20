@@ -9,6 +9,7 @@ import DeckCreation from "./DeckCreation"
 export default function DeckSelection({ onSelect }: { onSelect: (deck: Deck) => void }) {
     const theme = useTheme()
     const { width } = useWindowDimensions()
+    const [isConnected] = useStore(state => [state.isConnected])
 
     const decks = useStore(state => state.decks)
     const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null)
@@ -35,12 +36,14 @@ export default function DeckSelection({ onSelect }: { onSelect: (deck: Deck) => 
                 renderItem={({ item }) => (
                     <Button
                         key={item.id}
+                        disabled={item.type === 'image' && !isConnected}
                         style={{
                             marginVertical: 8,
                             width: (width - 100) / 2,
                             alignItems: 'center',
                             padding: 8,
                             backgroundColor: selectedDeckId === item.id ? theme.colors.primaryContainer : undefined,
+                            opacity: (item.type === 'image' && !isConnected) ? 0.5 : 1,
                         }}
                         onPress={() => {
                             setSelectedDeckId(item.id)
@@ -61,10 +64,12 @@ export default function DeckSelection({ onSelect }: { onSelect: (deck: Deck) => 
                         width: (width - 100) / 2,
                         alignItems: 'center',
                         padding: 8,
+                        opacity: !isConnected ? 0.5 : 1,
                     }}
                     onPress={() => {
                         setDeckCreation(true)
                     }}
+                    disabled={!isConnected}
                 >
                     <View style={{ alignItems: 'center' }}>
                         <Text variant="titleMedium">Custom</Text>
