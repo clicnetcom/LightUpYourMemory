@@ -4,7 +4,7 @@ import { useTheme } from "@/useTheme"
 import { get, ref } from "firebase/database"
 import { useEffect, useState } from "react"
 import { View, ScrollView } from "react-native"
-import { ActivityIndicator, Text, DataTable, Avatar } from "react-native-paper"
+import { ActivityIndicator, Text, DataTable, Avatar, Card } from "react-native-paper"
 
 export default function Dashboard() {
 
@@ -15,8 +15,8 @@ export default function Dashboard() {
     const [isAdmin, setIsAdmin] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
 
-
     const [users, setUsers] = useState([])
+    const [matches, setMatches] = useState([])
 
     useEffect(() => {
         get(ref(database, 'users')).then(async (snapshot) => {
@@ -45,6 +45,19 @@ export default function Dashboard() {
             }
         })
     }, [])
+
+    useEffect(() => {
+        get(ref(database, 'matches')).then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val()
+                const activeMatches = Object.values(data).filter((match: any) => !match.finished)
+                setMatches(activeMatches)
+            }
+        }).catch((error) => {
+            console.error("Error fetching matches:", error)
+        })
+    }, [])
+
     console.log('users', users)
 
     if (isLoading) {
@@ -79,7 +92,6 @@ export default function Dashboard() {
         )
     }
 
-
     return (
         <View
             style={{
@@ -89,6 +101,30 @@ export default function Dashboard() {
             }}
         >
             <ScrollView>
+                <Text variant="headlineMedium" style={{ marginBottom: 20 }}>
+                    Dashboard Overview
+                </Text>
+
+                <View style={{ flexDirection: 'row', gap: 16, marginBottom: 24 }}>
+                    <Card style={{ flex: 1 }}>
+                        <Card.Content>
+                            <Text variant="titleMedium">Total Users</Text>
+                            <Text variant="displaySmall">{users.length}</Text>
+                        </Card.Content>
+                    </Card>
+
+                    <Card style={{ flex: 1 }}>
+                        <Card.Content>
+                            <Text variant="titleMedium">Active Matches</Text>
+                            <Text variant="displaySmall">{matches.length}</Text>
+                        </Card.Content>
+                    </Card>
+                </View>
+
+                <Text variant="titleLarge" style={{ marginBottom: 16 }}>
+                    User Management
+                </Text>
+
                 <DataTable>
                     <DataTable.Header>
                         <DataTable.Title>Photo</DataTable.Title>
