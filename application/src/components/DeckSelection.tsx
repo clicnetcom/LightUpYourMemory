@@ -5,6 +5,7 @@ import { useStore } from "@/useStore"
 import { useState } from "react"
 import DeckPreview from "./DeckPreview"
 import DeckCreation from "./DeckCreation"
+import { playSound } from "@/utils"
 
 export default function DeckSelection({ onSelect }: { onSelect: (deck: Deck) => void }) {
     const theme = useTheme()
@@ -46,6 +47,7 @@ export default function DeckSelection({ onSelect }: { onSelect: (deck: Deck) => 
                             opacity: (item.type === 'image' && !isConnected) ? 0.5 : 1,
                         }}
                         onPress={() => {
+                            playSound()
                             setSelectedDeckId(item.id)
                             onSelect(item)
                         }}

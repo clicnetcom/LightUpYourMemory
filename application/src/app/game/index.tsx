@@ -9,7 +9,7 @@ import { View, FlatList, useWindowDimensions, StyleSheet, Pressable, Animated } 
 import { Text, Portal, Modal, Button } from "react-native-paper"
 import CardView from "@/components/CardView"
 import EndScreen from "@/components/EndScreen"
-import { formatTime } from "@/utils"
+import { formatTime, playSound } from "@/utils"
 import { get, ref, set, onValue, remove, update } from "firebase/database"
 import { database } from "@/firebase"
 import Matchmaking from "@/components/Matchmaking"
@@ -301,6 +301,7 @@ export default function Game() {
     }, [currentMatch, user])
 
     const handleCardPress = (cardState: CardState) => {
+        playSound()
         if (gameType === 'multiplayer') {
 
             const isPlayerOne = currentMatch?.p1.uid === user?.uid

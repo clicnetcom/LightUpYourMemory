@@ -1,9 +1,8 @@
-
-
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { router } from 'expo-router'
 import { Button, Icon, MD3Theme, useTheme } from 'react-native-paper'
+import { playSound } from '@/utils'
 
 export default function CustomButton({
     path,
@@ -36,6 +35,7 @@ export default function CustomButton({
             />}
             mode="contained"
             onPress={() => {
+                playSound()
                 if (onPress) {
                     onPress()
                 }

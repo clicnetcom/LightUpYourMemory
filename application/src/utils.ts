@@ -1,6 +1,8 @@
 import { getDownloadURL, getStorage, ref } from "firebase/storage"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
+import { Audio } from 'expo-av'
+
 export const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60)
     const seconds = time % 60
@@ -40,4 +42,15 @@ export const getStorageUrl = async (gsPath: string): Promise<string> => {
     const url = await getDownloadURL(fileRef)
     await setCachedUrl(gsPath, url)
     return url
+}
+
+export const playSound = async () => {
+    try {
+        const { sound } = await Audio.Sound.createAsync(
+            require('../assets/sounds/page-flip-47177.mp3')
+        )
+        await sound.playAsync()
+    } catch (error) {
+        console.log('Error playing sound:', error)
+    }
 }
