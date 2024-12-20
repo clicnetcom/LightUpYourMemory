@@ -10,13 +10,15 @@ type CardViewProps = {
         id: number
     }[]
     onCardPress: (card: CardState) => void,
-    deckType: DeckType
+    deckType: DeckType,
+    chatHeight?: number
 }
 
-export default function CardView({ cards, onCardPress, deckType }: CardViewProps) {
+export default function CardView({ cards, onCardPress, deckType, chatHeight = 0 }: CardViewProps) {
     const theme = useTheme()
     const { width, height } = useWindowDimensions()
-    const AVAILABLE_HEIGHT = height - 150 // space for  header
+    const HEADER_HEIGHT = 100 // space for header and scores
+    const AVAILABLE_HEIGHT = height - HEADER_HEIGHT - chatHeight
     const CARD_MARGIN = 4
 
     const totalCards = cards.length

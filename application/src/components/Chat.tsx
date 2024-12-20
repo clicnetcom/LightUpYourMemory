@@ -83,7 +83,7 @@ export default function Chat({ match }: { match: Match }) {
     }, [])
 
     return (
-        <View style={{ height: 300, borderWidth: 1, borderColor: theme.colors.outline, borderRadius: 8 }}>
+        <View style={{ height: 250, borderWidth: 1, borderColor: theme.colors.outline, borderRadius: 8 }}>
             <ScrollView
                 ref={scrollViewRef}
                 style={{

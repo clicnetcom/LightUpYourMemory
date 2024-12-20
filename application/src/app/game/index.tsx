@@ -559,9 +559,9 @@ export default function Game() {
                 deckType={deck.type}
                 cards={cards}
                 onCardPress={handleCardPress}
+                chatHeight={gameType === 'multiplayer' ? 250 : 0}
             />
-            {currentMatch && <Chat match={currentMatch} />}
-
+            {currentMatch && gameType === 'multiplayer' && <Chat match={currentMatch} />}
             <EndScreen
                 isGameComplete={isGameComplete}
                 mistakes={mistakes}
