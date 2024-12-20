@@ -89,7 +89,7 @@ export default function CardView({ cards, onCardPress, deckType, chatHeight = 0 
                                         <Text style={{ fontSize: CARD_SIZE * 0.8 }}>{item.value}</Text>
                                     )
                                 )
-                            ) : <Text>{item.value}</Text>}
+                            ) : null}
 
                         </View>
                     </Pressable>
