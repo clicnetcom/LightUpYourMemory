@@ -4,7 +4,7 @@ import { useTheme } from "@/useTheme"
 import { get, ref } from "firebase/database"
 import { useEffect, useState } from "react"
 import { View, ScrollView } from "react-native"
-import { Text } from "react-native-paper"
+import { ActivityIndicator, Text } from "react-native-paper"
 
 export default function Dashboard() {
 
@@ -13,6 +13,7 @@ export default function Dashboard() {
     const user = useStore(state => state.user)
 
     const [isAdmin, setIsAdmin] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         const userRef = ref(database, `users/${user?.uid}/isAdmin`)
@@ -21,10 +22,24 @@ export default function Dashboard() {
                 const data = snapshot.val()
                 console.log('isAdmin?', data)
                 setIsAdmin(data)
+                setIsLoading(false)
             }
         })
     }, [])
 
+
+    if (isLoading) {
+        return (
+            <View style={{
+                backgroundColor: theme.colors.background,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <ActivityIndicator size="large" color={theme.colors.primary} />
+            </View>
+        )
+    }
 
     if (!isAdmin) {
         return (
