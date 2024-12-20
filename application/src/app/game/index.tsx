@@ -213,47 +213,58 @@ export default function Game() {
 
 
     const makeAIMove = useCallback(() => {
-        const unmatchedCards = cards.reduce((acc, card, index) => {
-            if (!card.isMatched) acc.push(index)
-            return acc
-        }, [] as number[])
+        const resetCards = cards.map(card => ({
+            ...card,
+            isFlipped: card.isMatched
+        }))
+        setCards(resetCards)
+        setFlippedCards([])
 
-        if (unmatchedCards.length >= 2) {
-            const firstIndex = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)]
-            const newCards = [...cards]
-            newCards[firstIndex].isFlipped = true
-            setCards(newCards)
-            setFlippedCards([firstIndex])
+        setTimeout(() => {
+            const unmatchedCards = resetCards.reduce((acc, card, index) => {
+                if (!card.isMatched) acc.push(index)
+                return acc
+            }, [] as number[])
 
-            setTimeout(() => {
-                const remainingCards = unmatchedCards.filter(i => i !== firstIndex)
-                const secondIndex = remainingCards[Math.floor(Math.random() * remainingCards.length)]
-                newCards[secondIndex].isFlipped = true
+            if (unmatchedCards.length >= 2) {
+                const firstIndex = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)]
+                const newCards = [...resetCards]
+                newCards[firstIndex].isFlipped = true
                 setCards(newCards)
-                setFlippedCards([firstIndex, secondIndex])
+                setFlippedCards([firstIndex])
 
-                if (newCards[firstIndex].value === newCards[secondIndex].value) {
-                    newCards[firstIndex].isMatched = true
-                    newCards[secondIndex].isMatched = true
+                setTimeout(() => {
+                    const remainingCards = unmatchedCards.filter(i => i !== firstIndex)
+                    const secondIndex = remainingCards[Math.floor(Math.random() * remainingCards.length)]
+                    newCards[secondIndex].isFlipped = true
                     setCards(newCards)
-                    setFlippedCards([])
-                    setOpponentScore(prev => prev + 1)
-                    if (newCards.every(card => card.isMatched)) {
-                        finishGame(false)
-                    } else {
-                        setTimeout(makeAIMove, 700)
-                    }
-                } else {
+                    setFlippedCards([firstIndex, secondIndex])
+
                     setTimeout(() => {
-                        newCards[firstIndex].isFlipped = false
-                        newCards[secondIndex].isFlipped = false
-                        setCards(newCards)
-                        setFlippedCards([])
-                        setIsPlayerTurn(true)
+                        if (newCards[firstIndex].value === newCards[secondIndex].value) {
+                            newCards[firstIndex].isMatched = true
+                            newCards[secondIndex].isMatched = true
+                            newCards[firstIndex].isFlipped = false
+                            newCards[secondIndex].isFlipped = false
+                            setCards(newCards)
+                            setFlippedCards([])
+                            setOpponentScore(prev => prev + 1)
+                            if (newCards.every(card => card.isMatched)) {
+                                finishGame(false)
+                            } else {
+                                setTimeout(makeAIMove, 700)
+                            }
+                        } else {
+                            newCards[firstIndex].isFlipped = false
+                            newCards[secondIndex].isFlipped = false
+                            setCards(newCards)
+                            setFlippedCards([])
+                            setIsPlayerTurn(true)
+                        }
                     }, 1000)
-                }
-            }, 2000)
-        }
+                }, 1000)
+            }
+        }, 500)
     }, [cards])
 
     const updateFlippedCards = (newFlippedCards: number[], newCards: CardState[], changeTurn?: boolean) => {
