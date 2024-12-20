@@ -60,7 +60,13 @@ export default function Matchmaking() {
             },
             turn: match.turn || 'p1',
             board: match.board || [],
-            chat: match.chat || []
+            chat: [{
+                sender: 'system',
+                text: `${match.p1.name} created the match!`
+            }, {
+                sender: 'system',
+                text: `${user.displayName || 'Anon'} joined the match!`
+            }]
         }
 
         update(ref(database, `matches/${match.id}`), joinedMatch)
@@ -96,10 +102,7 @@ export default function Matchmaking() {
                 password,
                 turn: 'p1',
                 board: shuffledPairs,
-                chat: [{
-                    sender: 'system',
-                    text: `${user.displayName} created the match!`
-                }]
+                chat: []
             }
             const newMatchRef = ref(database, `matches/${updatedMatch.id}`)
             await update(newMatchRef, updatedMatch)
