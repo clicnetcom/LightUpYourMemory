@@ -96,9 +96,10 @@ export default function Matchmaking() {
                 password,
                 turn: 'p1',
                 board: shuffledPairs,
-                chat: [
-                    `${user.displayName} created the match!`
-                ]
+                chat: [{
+                    sender: 'system',
+                    text: `${user.displayName} created the match!`
+                }]
             }
             const newMatchRef = ref(database, `matches/${updatedMatch.id}`)
             await update(newMatchRef, updatedMatch)

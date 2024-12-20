@@ -18,6 +18,10 @@ export declare global {
         icon: string
         condition: string
     }
+    type Message = {
+        sender: string
+        text: string
+    }
     type Match = {
         id: string
         type: GameType
@@ -27,7 +31,7 @@ export declare global {
         password?: string
         turn?: string
         board?: CardState[],
-        chat?: string[]
+        chat?: Message[]
         p1Score?: number
         p2Score?: number
         isComplete?: boolean
