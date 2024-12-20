@@ -8,7 +8,10 @@
     "android": "npx expo start --android",
     "ios": "npx expo start --ios",
     "build-dev": "eas build --profile preview --platform=android",
-    "start-emulator": "start emulator -avd Pixel"
+    "start-emulator": "start emulator -avd Pixel",
+    "build": "expo export",
+    "build-web": "expo export -p web",
+    "deploy": "node deploy.js"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.23.1",
