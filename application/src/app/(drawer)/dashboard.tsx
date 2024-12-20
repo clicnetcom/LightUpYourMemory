@@ -27,7 +27,22 @@ export default function Dashboard() {
 
 
     if (!isAdmin) {
-        return "Not admin message"
+        return (
+            <View style={{
+                backgroundColor: theme.colors.background,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 20,
+            }}>
+                <Text variant="headlineMedium" style={{ marginBottom: 12 }}>
+                    Access Restricted
+                </Text>
+                <Text variant="bodyLarge" style={{ textAlign: 'center' }}>
+                    Sorry, this area is only accessible to administrators.
+                </Text>
+            </View>
+        )
     }
 
 
