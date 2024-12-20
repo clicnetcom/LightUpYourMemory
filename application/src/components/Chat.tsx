@@ -2,7 +2,7 @@ import { useTheme } from "@/useTheme"
 import { useStore } from "@/useStore"
 import { View, ScrollView, Image } from "react-native"
 import { Text, Button, TextInput, SegmentedButtons } from "react-native-paper"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { database } from "@/firebase"
 import { get, ref, update, onValue, push } from "firebase/database"
 import { FlatList } from "react-native-gesture-handler"
@@ -14,13 +14,21 @@ export default function Chat({ match }: { match: Match }) {
     const [messages, setMessages] = useState<Record<string, Message>>({})
     const [newMessage, setNewMessage] = useState('')
     const chatRef = ref(database, `matches/${match.id}/chat`)
+    const scrollViewRef = useRef<ScrollView>(null)
+
+    const scrollToBottom = () => {
+        scrollViewRef.current?.scrollToEnd({ animated: true })
+    }
 
     const sendMessage = (text: string) => {
         push(chatRef, {
             sender: user?.displayName || 'Anon',
-            text: text
+            text: text,
+            timestamp: Date.now()
+        }).then(() => {
+            // Scroll after sending
+            setTimeout(scrollToBottom, 100)
         })
-
     }
 
     const getMessageAlignment = (senderName: string) => {
@@ -62,6 +70,8 @@ export default function Chat({ match }: { match: Match }) {
                 const data = snapshot.val()
                 console.log('received messages', data)
                 setMessages(data)
+                // Scroll after receiving new messages
+                setTimeout(scrollToBottom, 100)
             }
         }, (error) => {
             console.error("Error watching chat:", error)
@@ -75,6 +85,7 @@ export default function Chat({ match }: { match: Match }) {
     return (
         <View style={{ height: 300, borderWidth: 1, borderColor: theme.colors.outline, borderRadius: 8 }}>
             <ScrollView
+                ref={scrollViewRef}
                 style={{
                     flex: 1,
                     padding: 10,
