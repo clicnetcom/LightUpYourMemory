@@ -95,6 +95,13 @@ export default function Game() {
             setCurrentMatch(newMatch)
         }
 
+        navigation.setOptions({
+            header: () => <CustomHeader
+                items={[]}
+                title={GAME_TITLES[gameType]}
+            />
+        })
+
         return () => {
             console.log('Cleaning up game')
             if (currentMatch?.p1.uid === user.uid) {
