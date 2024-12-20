@@ -5,9 +5,11 @@ import { Drawer } from 'expo-router/drawer'
 import { DrawerToggleButton } from "@react-navigation/drawer"
 import { useTheme } from "@/useTheme"
 import Logo from "@/components/Logo"
+import { useTranslation } from 'react-i18next'
 
 export default function HomePage() {
     const theme = useTheme()
+    const { t } = useTranslation()
     const [isConnected] = useStore(state => [state.isConnected])
     const { width } = useWindowDimensions()
     const CONTAINER_WIDTH = Math.min(300, width - 32)
@@ -22,8 +24,8 @@ export default function HomePage() {
             <Drawer.Screen
                 options={{
                     headerShown: true,
-                    drawerLabel: 'Home',
-                    headerTitle: 'LightUpYourMemory',
+                    drawerLabel: t('home.title'),
+                    headerTitle: t('home.title'),
                     headerLeft: () => (
                         <DrawerToggleButton tintColor={theme.colors.primary} />
                     ),
@@ -46,10 +48,10 @@ export default function HomePage() {
                 <View style={{ width: CONTAINER_WIDTH }}>
                     <FlatList
                         data={[
-                            { name: 'Single Player', type: 'single' },
-                            { name: 'Time Attack', type: 'time-attack' },
-                            { name: 'versus AI', type: 'single-ai' },
-                            { name: 'versus Player', type: 'multiplayer', online: true },
+                            { name: t('home.modes.singlePlayer'), type: 'single' },
+                            { name: t('home.modes.timeAttack'), type: 'time-attack' },
+                            { name: t('home.modes.versusAI'), type: 'single-ai' },
+                            { name: t('home.modes.versusPlayer'), type: 'multiplayer', online: true },
                         ]}
                         renderItem={({ item }) => (
                             <CustomButton
@@ -64,8 +66,8 @@ export default function HomePage() {
                 <View style={{ width: CONTAINER_WIDTH }}>
                     <FlatList
                         data={[
-                            { name: 'Leaderboards', path: 'leaderboards', online: true },
-                            { name: 'Achievements', path: 'achievements', online: true },
+                            { name: t('home.features.leaderboards'), path: 'leaderboards', online: true },
+                            { name: t('home.features.achievements'), path: 'achievements', online: true },
                         ]}
                         renderItem={({ item }) => (
                             <CustomButton

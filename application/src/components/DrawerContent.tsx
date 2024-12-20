@@ -5,6 +5,8 @@ import { StyleSheet, View } from 'react-native'
 import { useStore } from '@/useStore'
 import { auth } from '@/firebase'
 import { router } from 'expo-router'
+import { useTranslation } from 'react-i18next'
+import { SegmentedButtons } from 'react-native-paper'
 
 export default function CustomDrawerContent(props: any) {
     const user = useStore(state => state.user)
@@ -15,6 +17,8 @@ export default function CustomDrawerContent(props: any) {
 
     const isDarkTheme = useStore(state => state.isDarkTheme)
     const setIsDarkTheme = useStore(state => state.setIsDarkTheme)
+
+    const { t, i18n } = useTranslation()
 
     const handleLogout = async () => {
         setUser(null)
@@ -63,6 +67,18 @@ export default function CustomDrawerContent(props: any) {
                     </TouchableRipple>
                 }
 
+                <View style={styles.languageSection}>
+                    <Text variant="labelLarge" style={styles.languageTitle}>{t('drawer.language')}</Text>
+                    <SegmentedButtons
+                        value={i18n.language}
+                        onValueChange={(value) => i18n.changeLanguage(value)}
+                        buttons={[
+                            { value: 'en', label: t('drawer.languages.en') },
+                            { value: 'de', label: t('drawer.languages.de') },
+                            { value: 'pt', label: t('drawer.languages.pt') },
+                        ]}
+                    />
+                </View>
             </DrawerContentScrollView>
 
             <Drawer.Section style={styles.bottomDrawerSection}>
@@ -114,5 +130,12 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#f4f4f4',
         alignItems: 'center'
+    },
+    languageSection: {
+        padding: 16,
+        gap: 8,
+    },
+    languageTitle: {
+        marginBottom: 8,
     },
 })
