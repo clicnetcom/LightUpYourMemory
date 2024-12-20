@@ -10,6 +10,8 @@ import NetInfo from '@react-native-community/netinfo'
 import { get, ref, set } from '@firebase/database'
 import { getStorageUrl } from '@/utils'
 
+import '../i18n'
+
 export default function AppLayout() {
     const theme = useTheme()
     const mode = useInvertedThemeMode()

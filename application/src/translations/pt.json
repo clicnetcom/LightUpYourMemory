@@ -1,0 +1,23 @@
+{
+    "home": {
+        "title": "IluminarSuaMemória",
+        "modes": {
+            "singlePlayer": "Um Jogador",
+            "timeAttack": "Contra o Tempo",
+            "versusAI": "contra IA",
+            "versusPlayer": "contra Jogador"
+        },
+        "features": {
+            "leaderboards": "Classificações",
+            "achievements": "Conquistas"
+        }
+    },
+    "drawer": {
+        "language": "Idioma",
+        "languages": {
+            "en": "Inglês",
+            "de": "Alemão",
+            "pt": "Português"
+        }
+    }
+}

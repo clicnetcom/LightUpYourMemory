@@ -1,0 +1,23 @@
+{
+    "home": {
+        "title": "LightUpYourMemory",
+        "modes": {
+            "singlePlayer": "Single Player",
+            "timeAttack": "Time Attack",
+            "versusAI": "versus AI",
+            "versusPlayer": "versus Player"
+        },
+        "features": {
+            "leaderboards": "Leaderboards",
+            "achievements": "Achievements"
+        }
+    },
+    "drawer": {
+        "language": "Language",
+        "languages": {
+            "en": "English",
+            "de": "German",
+            "pt": "Portuguese"
+        }
+    }
+}

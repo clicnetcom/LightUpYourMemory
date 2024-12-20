@@ -1,0 +1,23 @@
+{
+    "home": {
+        "title": "LichtDeinGedächtnis",
+        "modes": {
+            "singlePlayer": "Einzelspieler",
+            "timeAttack": "Zeitangriff",
+            "versusAI": "gegen KI",
+            "versusPlayer": "gegen Spieler"
+        },
+        "features": {
+            "leaderboards": "Bestenlisten",
+            "achievements": "Erfolge"
+        }
+    },
+    "drawer": {
+        "language": "Sprache",
+        "languages": {
+            "en": "Englisch",
+            "de": "Deutsch",
+            "pt": "Portugiesisch"
+        }
+    }
+}
